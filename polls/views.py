@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest, JsonResponse, HttpResponseBadRequest
 
 import logging
+logging = logging.getLogger(__name__)
 
 
 def index(request: HttpRequest):
@@ -74,11 +75,46 @@ def addInvenType(req: HttpRequest):
         return JsonResponse({'return_code': 500, 'msg': f'cant add inventory type, LOG: {e}'})
 
 
+def addInven(req: HttpRequest):
+    print(req.POST)
+    if req.POST.__len__() > 4 or req.POST.__len__() < 3:
+        logging.warn(
+            f"Bad requset addInven from {req.META.get('REMOTE_ADDR')}")
+        return JsonResponse({'return_code': 400, 'msg': 'bad request data'})
+
+    try:
+        if req.POST.get('pk', False):
+            try:
+                inven = Inventory.objects.get(pk=int(req.POST.get('pk')))
+            except ValueError:
+                logging.error(f'invalid item, {e}')
+                return JsonResponse({'return_code': 400, 'msg': 'invalid inventory item'})
+            except Exception as e:
+                logging.error(f'Cant get inven item, {e}')
+                return JsonResponse({'return_code': 400, 'msg': f'cant update item, LOG:{e}'})
+        else:
+            inven = Inventory()
+
+        invenType = InventoryType.objects.get(pk=int(req.POST.get('type')))
+        inven.name = req.POST.get('name', 'Dummy name')
+        inven.stock = int(req.POST.get('stock', 0))
+        inven.type = invenType
+        inven.save()
+        return JsonResponse({'return_code': 0, 'msg': 'ok'})
+    except ValueError:
+        logging.error(f'invalid invenType, {e}')
+        return JsonResponse({'return_code': 400, 'msg': 'invalid inventory type'})
+    except Exception as e:
+        logging.error(f'Failed to add inventory, {e}')
+        return JsonResponse({'return_code': 500, 'msg': f'cant add item, LOG: {e}'})
+
+
 def addArea(req: HttpRequest):
-    if req.POST.__len__() != 1:
+    if req.POST.__len__() > 2 or req.POST.__len__() < 1:
         logging.warn(
             f"Bad requset addArea from {req.META.get('REMOTE_ADDR')}")
         return JsonResponse({'return_code': 400, 'msg': 'bad request data'})
+
     try:
         area = Area(name=req.POST.get('name'))
         area.save()
@@ -96,7 +132,8 @@ def addAccessPoint(req: HttpRequest):
             f"Bad request addAccessPoint from {req.META.get('REMOTE_ADDR')}")
         return JsonResponse({'return_code': 400, 'msg': 'bad request data'})
     try:
-        AccessPoint.new(req.POST)
+        # print(req.POST.get('wifi'))
+        AccessPoint.new(req.POST, wifi=req.POST.get('wifi', ''))
         return JsonResponse({'return_code': 0, 'msg': 'Ok'})
     except Exception as e:
         print(e)

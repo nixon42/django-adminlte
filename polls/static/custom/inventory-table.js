@@ -39,6 +39,8 @@ class ModalObjTemplate {
             data[key] = val.val();
         });
 
+        // console.log(this.inputDom.type.find(':selected').data('val'));
+
         $.ajax({
             url: this.insertUrl,
             data: data,
@@ -48,7 +50,7 @@ class ModalObjTemplate {
         }).fail(() => {
             toastr.error('failed to insert data')
         }).done((res) => {
-            if (res.return_code != 0) { toastr.error(`failed, reason ${res.msg}`); return; }
+            if (res.return_code != 0) { toastr.error(`failed, ${res.msg}`); return; }
             toastr.success('Ok')
             this.modal.modal('hide');
             this.loadDataCB();
@@ -72,6 +74,11 @@ class ModalObjTemplate {
         // console.log(data);
 
         $.each(this.inputDom, function (key, val) {
+            if (val.is('select')) {
+                val.val(item.fields[key]).change();
+                // val.val(item.fields.key).trigger('change');
+                return;
+            }
             val.val(item.fields[key]);
         });
         this.modal.modal();
@@ -166,11 +173,14 @@ function inventoryContent() {
     InventoryType._content = content.find('#inventory-type-table');
     InventoryType.modalSel = content.find('.inventory-type-modal');
     InventoryType.globalVarUpdateCB = (data) => {
-        INVEN_TYPE_DATA = data;
+        INVEN_TYPE_DATA = [];
+        INVEN_TYPE_DATA.push({ pk: 0, name: '' });
+        // console.log(data);
         $('.input-inven-t').empty();
-        $('.input-inven-t').append('<option val="0"></option>');
+        $('.input-inven-t').append('<option value="0"></option>');
         $.each(InventoryType.data, (key, val) => {
-            $('.input-inven-t').append(`<option val="${val.pk}">${val.fields.name}</option>`);
+            INVEN_TYPE_DATA.push({ pk: val.pk, name: val.fields.name });
+            $('.input-inven-t').append(`<option value="${val.pk}">${val.fields.name}</option>`);
         });
     };
     // InventoryType.inputOptDom = '.input-inven-t';
@@ -231,27 +241,49 @@ function inventoryContent() {
     Inventory.dataUrl = '/getinven';
     Inventory.insertUrl = '/addinven';
     Inventory.globalVarUpdateCB = (data) => {
+        // console.log(data);
+        // return;
         let search = {
-            'Router': { selector: '.input-router', variable: INVEN_ROUTER },
-            'Converter': { selector: '.input-converter', variable: INVEN_KONVERTER }
+            'Router': {
+                selector: '.input-router',
+                variable: (data) => {
+                    INVEN_ROUTER = [];
+                    INVEN_ROUTER.push({ pk: 0, name: '' });
+                    $.each(data, (key, val) => {
+                        INVEN_ROUTER.push({ pk: val.pk, name: val.fields.name });
+                    });
+                }
+            },
+            'Konverter': {
+                selector: '.input-converter',
+                variable: (data) => {
+                    INVEN_KONVERTER = [];
+                    INVEN_KONVERTER.push({ pk: 0, name: '' });
+                    $.each(data, (key, val) => {
+                        INVEN_KONVERTER.push({ pk: val.pk, name: val.fields.name });
+                    });
+                }
+            }
         };
         $.each(search, (key, val) => {
-            val.variable = [];
             $(val.selector).empty();
-            $(val.selector).append('<option val="0"></option>');
+            $(val.selector).append('<option value="0"></option>');
             // console.log(INVEN_TYPE_DATA);
             $.each(INVEN_TYPE_DATA, (_key, _type) => {
-                if (_type.fields.name == key) {
+                if (_type.name == key) {
                     // console.log(data);
-                    let _inven = $.map(data, (inven_val, inven_key) => {
-                        if (inven_val.fields.type = _type.pk) {
-                            return inven_val;
+                    let _inven = [];
+                    $.each(data, (data_key, data_val) => {
+                        if (data_val.fields.type == _type.pk) {
+                            _inven.push(data_val);
                         }
                     });
-                    val.variable = _inven;
+                    // console.log(_inven);
+                    val.variable(_inven);
                     $.each(_inven, (_, v) => {
-                        $(val.selector).append(`<option val="${v.pk}}">${v.fields.name}</option>`);
-                    });
+                        $(val.selector).append(`<option value="${v.pk}">${v.fields.name}</option>`);
+                    }
+                    );
                 }
             });
         });
@@ -274,6 +306,7 @@ function inventoryContent() {
             // console.log(arg);
         },
         rowDoubleClick: (arg) => {
+            console.log(arg.item);
             let $row = Inventory.jsgrid.find('.jsgrid-selected-row');
             if ($row.hasClass("highlight")) {
                 $row.toggleClass("highlight");
@@ -288,10 +321,11 @@ function inventoryContent() {
             Inventory.editBtn.removeClass("d-none");
         },
         fields: [
-            { type: 'control', with: 40, editButton: false, deleteButton: false },
+            // { type: 'control', with: 40, editButton: false, deleteButton: false },
             { name: 'pk', type: 'number', width: 50, headerTemplate: 'No' },
             { name: 'fields.name', type: 'text', width: 200, headerTemplate: 'Name' },
-            { name: 'fields.type', type: 'select', items: INVEN_TYPE_DATA, width: 150, headerTemplate: 'Type', valueField: 'pk', textField: 'fields.name' }
+            { name: 'fields.type', type: 'select', items: INVEN_TYPE_DATA, width: 150, headerTemplate: 'Type', valueField: 'pk', textField: 'name' },
+            { name: 'fields.stock', type: 'number', width: 100, headerTemplate: 'Stock' },
         ],
         controller: {
             loadData: (filter) => {
@@ -301,11 +335,15 @@ function inventoryContent() {
                     return (!filter.pk || data.pk === filter.pk)
                         && (!filter.fields.name || data.fields.name.indexOf(filter.fields.name) > -1)
                         && (!filter.fields.type || data.fields.type === filter.fields.type)
+                        && (!filter.fields.stock || data.fields.stock === filter.fields.stock)
                 });
             },
         },
     };
+    // console.log(INVEN_TYPE_DATA);
     Inventory.init();
-    Inventory.jsgrid.find('.jsgrid-filter-row').children().eq(3).children().addClass('input-inven-t');
-    InventoryType.globalVarUpdateCB(InventoryType.data);
+    // Inventory.jsgrid.find('.jsgrid-filter-row').children().eq(3).children().addClass('input-inven-t');
+    // InventoryType.globalVarUpdateCB(InventoryType.data);
+    TABLE_VAR.invent = InventoryType;
+    TABLE_VAR.inven = Inventory;
 }

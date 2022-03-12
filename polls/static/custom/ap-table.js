@@ -82,6 +82,9 @@ var accessPointModal = {
         $.each(this.defaultVal, function (key, val) {
             inputDom[key].val(val);
         });
+        this.inputDom.area.removeAttr('disabled');
+        this.inputDom.rt.removeAttr('disabled');
+        this.inputDom.rw.removeAttr('disabled');
         this.modal.modal();
     },
     show: function (data) {
@@ -90,6 +93,10 @@ var accessPointModal = {
         // console.log(data);
 
         $.each(this.inputDom, function (key, val) {
+            if (val.is('select')) {
+                val.val(data.fields[key]).change();
+                return;
+            }
             val.val(data.fields[key]);
         });
         this.inputDom.area.attr('disabled', 'disabled');
@@ -305,6 +312,7 @@ function accessPointTable() {
         },
         rowDoubleClick: function (arg) {
             let $row = this.rowByItem(arg.item);
+            console.log(arg.item);
             if ($row.hasClass("highlight")) {
                 $row.toggleClass("highlight");
                 editBtn.addClass("d-none");
@@ -337,8 +345,8 @@ function accessPointTable() {
             { name: "fields.linkb", type: "text", width: 300, headerTemplate: 'Link B' },
             { name: "fields.linka2", type: "text", width: 300, headerTemplate: 'Link A2' },
             { name: "fields.linkb2", type: "text", width: 300, headerTemplate: 'Link B2' },
-            { name: "fields.router", type: "select", width: 200, headerTemplate: 'Router', items: INVEN_ROUTER, valueField: "pk", textField: "fields.code" },
-            { name: "fields.converter", type: "select", width: 200, headerTemplate: 'Converter', items: INVEN_KONVERTER, valueField: "pk", textField: "fields.code" },
+            { name: "fields.router", type: "select", width: 200, headerTemplate: 'Router', items: INVEN_ROUTER, valueField: "pk", textField: "name" },
+            { name: "fields.converter", type: "select", width: 200, headerTemplate: 'Converter', items: INVEN_KONVERTER, valueField: "pk", textField: "name" },
             { name: "fields.note", type: "text", width: 200, headerTemplate: 'Note' },
         ],
     });

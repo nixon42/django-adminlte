@@ -10,5 +10,6 @@ urlpatterns = [
     path('getinvent', views.getInvenType, name='getInvenType'),
     path('addinvent', views.addInvenType, name='addInvenType'),
     path('getinven', views.getInven, name='getInven'),
+    path('addinven', views.addInven, name='addInven'),
     path('', views.dashboard, name='index'),
 ]

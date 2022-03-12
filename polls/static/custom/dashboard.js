@@ -1,8 +1,4 @@
 // global var
-var INVEN_TYPE_DATA = []
-var INVEN_ROUTER = [{ pk: 0, fields: { code: 'asu' } }]
-var INVEN_KONVERTER = [{ pk: 0, fields: { code: 'asu' } }]
-var AREA = []
 
 var $DOM = $(document);
 var contentSpace = $("#content");
@@ -72,14 +68,14 @@ accessPointModal.defaultVal = {
 };
 accessPointModal.init();
 
-// ap table init
-accessPointTable();
-$("#content #ap-table-jsgrid").jsGrid('refreshData');
-
 // inven table init
 // InventoryContent.init();
 inventoryContent();
 // console.log(InventoryContent.InventoryType.name);
+
+// ap table init
+accessPointTable();
+$("#content #ap-table-jsgrid").jsGrid('refreshData');
 
 // dashboard btn
 $DOM.on('click', '.dashboard3-btn', function () {

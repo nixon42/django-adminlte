@@ -93,7 +93,7 @@ class AccessPoint(models.Model):
     def __str__(self) -> str:
         return self.code
 
-    def new(data: dict):
+    def new(data: dict, wifi=''):
         # get ip
         try:
             socket.inet_aton(data.get('ip', ''))
@@ -112,8 +112,9 @@ class AccessPoint(models.Model):
             _i = int(_i)
             router: Inventory = Inventory.objects.get(pk=_i)
         except Exception as e:
+            router = None
             logging.error(f'router error {e}')
-            raise Exception('router')
+            # raise Exception('router')
 
         # get converter
         logging.info('get converter')
@@ -122,8 +123,9 @@ class AccessPoint(models.Model):
             _i = int(_i)
             converter: Inventory = Inventory.objects.get(pk=_i)
         except Exception as e:
+            converter = None
             logging.error(f'converter error {e}')
-            raise Exception('converter')
+            # raise Exception('converter')
 
         # add record
         if data.get('pk', False):
@@ -165,7 +167,7 @@ class AccessPoint(models.Model):
         ap.ip = data.get('ip')
         ap._long = data.get('_long', '')
         ap.lat = data.get('lat', '')
-        ap.wifi = data.get('wifi', ''),
+        ap.wifi = wifi
         ap.customer = data.get('customer', '')
         ap.phone = data.get('phone', '')
         ap.outdoor = True if data.get('outdoor', 'false') == 'true' else False
