@@ -1,0 +1,4 @@
+.venv
+polls/templates/polls/AdminLTE-3.0.5
+.vscode
+*.log

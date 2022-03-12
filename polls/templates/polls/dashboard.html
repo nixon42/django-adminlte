@@ -1,0 +1,594 @@
+{% extends "polls/base.html"%}
+{% load static %}
+
+{% block title%}
+OrbitalLTE | Dashboard
+{% endblock %}
+
+{% block script %}
+{{ block.super }}
+<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+
+<!-- custom -->
+<script src="{% static 'dist/js/demo.js' %}"></script>
+<script src="{% static 'dist/js/pages/dashboard3.js' %}"></script>
+<script src="{% static 'custom/dashboard3.js' %}"></script>
+<script src="{% static 'custom/dashboard2.js' %}"></script>
+<script src="{% static 'custom/ap-table.js' %}"></script>
+<script src="{% static 'custom/inventory-table.js' %}"></script>
+
+<!-- bootsrap-datepicker -->
+<script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js'%}"></script>
+
+<!-- main dashboard script -->
+<script src="{% static 'custom/dashboard.js' %}"></script>
+<!-- add event script -->
+<script src="{% static 'custom/add-event.js' %}"></script>
+
+<script>
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    });
+</script>
+
+{% endblock%}
+
+{% block style %}
+{{ block.super }}
+<!-- Ionicons -->
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<!-- bootsrap-datepicker -->
+<link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css' %}">
+{% endblock %}
+{% block body %}
+
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#" class="nav-link">Home</a>
+                </li>
+                <!-- <li class="nav-item d-none d-sm-inline-block">
+                    <a href="#" class="nav-link">Contact</a>
+                </li> -->
+            </ul>
+
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="#" class="brand-link">
+                <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light">AdminLTE 3</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar user panel (optional) -->
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="{% static 'dist/img/user2-160x160.jpg' %}" class="img-circle elevation-2"
+                            alt="User Image">
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">Alexander Pierce</a>
+                    </div>
+                </div>
+
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                       with font-awesome or any other icon font library -->
+                        <!-- Dashboard -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link disabled">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Dashboard
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Dashboard v1</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link dashboard2-btn">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Dashboard v2</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link dashboard3-btn">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Dashboard v3</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- Table menu -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link active">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    Tables
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link active ap-table-btn">
+                                        <i class="fa fa-wifi nav-icon"></i>
+                                        <p>Access Point</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link inven-table-btn">
+                                        <i class="fa fa-box nav-icon"></i>
+                                        <p>Inventory</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="fa fa-book nav-icon"></i>
+                                        <p>Timeline</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <div class="content-wrapper" id="content">
+            <!-- AP table -->
+            <div id="ap-table-content" class="">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Access Point</h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active">AP</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="card">
+                        <style>
+                            tr.highlight td.jsgrid-cell {
+                                background-color: #e3ec95;
+                            }
+
+                            /* .jsgrid-grid-header {
+                                        overflow: auto;
+                                    } */
+                        </style>
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <!-- <p class="text-center">Access Point</p> -->
+                            </h3>
+                            <div class="card-tools">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col">
+                                            <a class="btn btn-block bg-primary ap-table-tool-btn-refresh"
+                                                data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                <i class="fa fa-sync"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <a class="btn btn-block bg-success ap-table-tool-btn-add"
+                                                data-toggle="tooltip" data-placement="top" title="Add">
+                                                <i class=" fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <a class="btn btn-block bg-warning ap-table-tool-btn-edit d-none"
+                                                data-toggle="tooltip" data-placement="top" title="Edit">
+                                                <i class=" fas fa-edit text-white"></i>
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div id="ap-table-jsgrid"></div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </section>
+            </div>
+            <!-- Inventory -->
+            <div id="inventory-content" class="d-none">
+                <!-- inven type modal -->
+                <div class="modal fade inventory-type-modal">
+                    <div class="modal-dialog modal-md modal-dialog-centered">
+                        <div class="modal-content">
+                            <!-- header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add New Record</h4>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <!-- body -->
+                            <div class="modal-body">
+                                <form role="form">
+                                    <!-- name -->
+                                    <div class="pb-3">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control input-name" placeholder="Type barang">
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button href="#" type="button" class="btn btn-success modal-save-btn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- inven modal -->
+                <div class="modal fade inventory-modal">
+                    <div class="modal-dialog modal-md modal-dialog-centered">
+                        <div class="modal-content">
+                            <!-- header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Inventory</h4>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <!-- body -->
+                            <div class="modal-body">
+                                <form role="form">
+                                    <!-- name -->
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control input-name" placeholder="Nama Barang">
+                                    </div>
+                                    <!-- type -->
+                                    <div class="form-group">
+                                        <label>Inventory Type</label>
+                                        <select class="form-control select2bs4 input-inven-t" style="width: 100%;">
+                                            <option selected="selected"></option>
+                                            <option value="0">Router</option>
+                                            <option value="1">Konv</option>
+                                        </select>
+                                    </div>
+                                    <!-- stock -->
+                                    <div class="form-group">
+                                        <label>Stock</label>
+                                        <input type="number" class="form-control input-stock" placeholder="In Stock">
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button href="#" type="button" class="btn btn-success modal-save-btn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Inventory<h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active">inventory</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <!-- inventory-type -->
+                                <div class="card" id="inventory-type-table">
+                                    <style>
+                                        tr.highlight td.jsgrid-cell {
+                                            background-color: #e3ec95;
+                                        }
+
+                                        /* .jsgrid-grid-header {
+                                                                                overflow: auto;
+                                                                            } */
+                                    </style>
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <p class="text-center" style="font-size: 20px;">Inventory Type</p>
+                                        </h3>
+                                        <div class="card-tools">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                            data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                            <i class="fa fa-sync"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-success tool-btn-add"
+                                                            data-toggle="tooltip" data-placement="top" title="Add">
+                                                            <i class=" fas fa-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-warning tool-btn-edit d-none"
+                                                            data-toggle="tooltip" data-placement="top" title="Edit">
+                                                            <i class=" fas fa-edit text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div id="inventory-type-table-jsgrid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <!-- inventory -->
+                                <div class="card" id="inventory-table">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <p class="text-center" style="font-size: 20px;">Inventory</p>
+                                        </h3>
+                                        <div class="card-tools">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                            data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                            <i class="fa fa-sync"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-success tool-btn-add"
+                                                            data-toggle="tooltip" data-placement="top" title="Add">
+                                                            <i class=" fas fa-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-warning tool-btn-edit d-none"
+                                                            data-toggle="tooltip" data-placement="top" title="Edit">
+                                                            <i class=" fas fa-edit text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div id="inventory-table-jsgrid"></div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+            </div>
+            </section>
+            <!-- ./inventory-type -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+
+    </div>
+    <!-- ap table modal -->
+    <div class="modal fade" id="ap-table-modal">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content">
+                <!-- modal header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Record</h4>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span>
+                    </button>
+                    <!-- ./ modal header -->
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <!-- IP input -->
+                        <div class="pb-3">
+                            <label>IP Router</label>
+                            <input type="text" class="form-control input-ip" placeholder="IP Router">
+                        </div>
+                        <!-- CUSTOMER -->
+                        <div class="pb-3">
+                            <label>Customer</label>
+                            <input type="text" class="form-control input-customer" placeholder="Customer name">
+                        </div>
+                        <!-- Phone Name -->
+                        <div class="pb-3">
+                            <label>Phone</label>
+                            <input type="text" class="form-control input-phone" placeholder="Customer Phone Number">
+                        </div>
+                        <!-- Long -->
+                        <div class="pb-3">
+                            <label>Longitude</label>
+                            <input type="text" class="form-control input-long" placeholder="Longitude">
+                        </div>
+                        <!-- lat -->
+                        <div class=" pb-3">
+                            <label>Latitude</label>
+                            <input type="text" class="form-control input-lat" placeholder="Latitude">
+                        </div>
+                        <!-- Wifi -->
+                        <div class="pb-3">
+                            <label>Wifi</label>
+                            <input type="text" class="form-control input-wifi" placeholder="Wifi name" value="RT NET">
+                        </div>
+                        <!-- Date -->
+                        <div class=" form-group">
+                            <label>Date</label>
+                            <div class="input-group date" data-provider="datepicker">
+                                <style>
+                                    .datepicker,
+                                    .table-condensed {
+                                        width: 300px;
+                                        /* height: 300px; */
+                                    }
+                                </style>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text fa fa-calendar"></span>
+                                </div>
+                                <input type="text" class="form-control datepicker-input input-date"
+                                    placeholder="Enter a Date">
+                            </div>
+                        </div>
+
+                        <!-- Area -->
+                        <div class="form-group">
+                            <label>Area</label>
+                            <select class="form-control input-area">
+                                <option value=1>MJT</option>
+                                <option value=2>NGML</option>
+                            </select>
+                        </div>
+                        <!-- RT RW -->
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label>RT</label>
+                                    <input type="number" class="form-control input-rt" placeholder="RT">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label>RW</label>
+                                    <input type="number" class="form-control input-rw" placeholder="RW">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <!-- Outdoor -->
+                                <div class="form-group">
+                                    <label>Outdoor</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input input-outdoor pt-3" type="checkbox">
+                                        <label class="form-check-label">Outdoor</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <!-- FO -->
+                                <div class="form-group">
+                                    <label>Fiber</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input input-fo pt-3" type="checkbox">
+                                        <label class="form-check-label">FO</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Link -->
+                        <div class="form-group">
+                            <label>Link A</label>
+                            <select class="form-control select2bs4 input-linka" style="width: 100%;">
+                                <option selected="selected"></option>
+                                <option value="0">MJT012938</option>
+                                <option value="1">NGML91823</option>
+                            </select>
+                            <label>Link B</label>
+                            <select class="form-control input-linkb select2bs4" style="width: 100%">
+                                <option></option>
+                                <option value="0">MJT012938</option>
+                                <option value="1">NGML91823</option>
+                            </select>
+                            <label>Link A 2</label>
+                            <select class="form-control input-linka2 select2bs4" style="width: 100%;">
+                                <option></option>
+                                <option value="0">MJT012938</option>
+                                <option value="1">NGML91823</option>
+                            </select>
+                            <label>Link B 2</label>
+                            <select class="form-control input-linkb2 select select2bs4" style="width: 100%;">
+                                <option></option>
+                                <option value="0">MJT012938</option>
+                                <option value="1">NGML91823</option>
+                            </select>
+                        </div>
+                        <!-- Router -->
+                        <div class="form-group">
+                            <label>Router</label>
+                            <select class="form-control input-router">
+                                <option></option>
+                                <option value="0">TTLN300RT</option>
+                                <option value="1">TTLN355RT</option>
+                            </select>
+                        </div>
+                        <!-- Konverter -->
+                        <div class="form-group">
+                            <label>FO2LAN</label>
+                            <select class="form-control input-converter">
+                                <option></option>
+                                <option value="1">4FO2LAN</option>
+                                <option value="2">2FO2LAN</option>
+                                <option value="3">FO2LAN</option>
+                            </select>
+                        </div>
+                        <!-- Note -->
+                        <label>Note</label>
+                        <textarea class="form-control input-note" rows="3" placeholder="Enter Text Here"></textarea>
+                </div>
+                <!-- modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-default btn-warning d-none ap-table-modal-clone">Clone</button>
+                    <button type="button" class="btn btn-success ap-table-modal-save">Save</button>
+                    <!-- modal footer -->
+                </div>
+                <!-- ./ modal content -->
+            </div>
+        </div>
+    </div>
+    </div>
+    {{ block.super }}
+    <!-- ./wrapper -->
+</body>
+{% endblock %}
