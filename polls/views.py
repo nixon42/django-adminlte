@@ -3,7 +3,7 @@ from django.core import serializers
 from .models import AccessPoint, AccessPoint_Report, AccessPoint_EditLog, AccessPoint_UpDownLog, AccessPoint_UpLog, Action_Log, Area, Inventory, InventoryType
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest, JsonResponse, HttpResponseBadRequest
-
+from django.conf import global_settings
 import logging
 logging = logging.getLogger(__name__)
 
@@ -35,8 +35,8 @@ def getArea(req: HttpRequest):
 
 
 def addArea(req: HttpRequest):
-    print('cok')
-    print(req.POST)
+    if global_settings.DEBUG:
+        print(req.POST)
     if req.POST.__len__() > 3:
         logging.warn(
             f"Bad requset addArea from {req.META.get('REMOTE_ADDR')}")
@@ -64,6 +64,8 @@ def addArea(req: HttpRequest):
     except Exception as e:
         logging.error(f'cant get Area ,{e}')
         return JsonResponse({'return_code': 500, 'msg': f'cant add item, LOG:{e}'})
+
+
 def getInvenType(req: HttpRequest):
     data = serializers.serialize('json', InventoryType.objects.all())
     return JsonResponse({'return_code': 0, 'msg': 'ok', 'data': data})
@@ -75,7 +77,8 @@ def getInven(req: HttpRequest):
 
 
 def addInvenType(req: HttpRequest):
-    print(req.POST)
+    if global_settings.DEBUG:
+        print(req.POST)
     if req.POST.__len__() > 2:
         logging.warn(
             f"Bad requset addInvenType from {req.META.get('REMOTE_ADDR')}")
@@ -106,7 +109,8 @@ def addInvenType(req: HttpRequest):
 
 
 def addInven(req: HttpRequest):
-    print(req.POST)
+    if global_settings.DEBUG:
+        print(req.POST)
     if req.POST.__len__() > 4 or req.POST.__len__() < 3:
         logging.warn(
             f"Bad requset addInven from {req.META.get('REMOTE_ADDR')}")
@@ -139,24 +143,9 @@ def addInven(req: HttpRequest):
         return JsonResponse({'return_code': 500, 'msg': f'cant add item, LOG: {e}'})
 
 
-# def addArea(req: HttpRequest):
-#     if req.POST.__len__() > 2 or req.POST.__len__() < 1:
-#         logging.warn(
-#             f"Bad requset addArea from {req.META.get('REMOTE_ADDR')}")
-#         return JsonResponse({'return_code': 400, 'msg': 'bad request data'})
-
-#     try:
-#         area = Area(name=req.POST.get('name'))
-#         area.save()
-#         return JsonResponse({'return_code': 0, 'msg': 'ok'})
-#     except Exception as e:
-#         logging.error(f'cant add new area, {e}')
-#         return JsonResponse({'return_code': 500, 'msg': f'failed to add area, LOG: {e}'})
-#         # logging
-
-
 def addAccessPoint(req: HttpRequest):
-    print(req.POST)
+    if global_settings.DEBUG:
+        print(req.POST)
     if req.POST.__len__() > 20 or req.POST.__len__() < 19:
         logging.warn(
             f"Bad request addAccessPoint from {req.META.get('REMOTE_ADDR')}")
@@ -166,7 +155,6 @@ def addAccessPoint(req: HttpRequest):
         AccessPoint.new(req.POST, wifi=req.POST.get('wifi', ''))
         return JsonResponse({'return_code': 0, 'msg': 'Ok'})
     except Exception as e:
-        print(e)
         if e.args[0] == 'rt':
             logging.error('invalid rt or rw')
             return JsonResponse({'return_code': 400, 'msg': 'RT or RW are invalid'})

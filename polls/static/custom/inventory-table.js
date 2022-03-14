@@ -149,7 +149,6 @@ class TableObjTemplate {
         _modalObj.defaultVal = this.defaultVal;
         _modalObj.modal = this.modalSel;
         _modalObj.cloneBtn = this.modalSel.find('.modal-clone-btn');
-        // console.log(this.modalSel.find('.modal-clone-btn').log());
         _modalObj.loadDataCB = this.refreshData.bind(this);
         _modalObj.init();
         this.modalObj = _modalObj;
@@ -315,7 +314,7 @@ function inventoryContent() {
             // console.log(arg);
         },
         rowDoubleClick: (arg) => {
-            console.log(arg.item);
+            // console.log(arg.item);
             let $row = Inventory.jsgrid.find('.jsgrid-selected-row');
             if ($row.hasClass("highlight")) {
                 $row.toggleClass("highlight");

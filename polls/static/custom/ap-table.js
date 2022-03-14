@@ -313,7 +313,7 @@ function accessPointTable() {
         },
         rowDoubleClick: function (arg) {
             let $row = this.rowByItem(arg.item);
-            console.log(arg.item);
+            // console.log(arg.item);
             if ($row.hasClass("highlight")) {
                 $row.toggleClass("highlight");
                 editBtn.addClass("d-none");
