@@ -4,7 +4,10 @@ var INVEN_TYPE_DATA = [
     { pk: 2, name: '2cok' },
     { pk: 3, name: '3cok' },
 ]
-var INVEN_ROUTER = [{ pk: 0, fields: { name: 'asu' } }]
-var INVEN_KONVERTER = [{ pk: 0, fields: { name: 'asu' } }]
-var TABLE_VAR = {}
-var AREA = []
+var INVEN_ROUTER = [{ pk: 0, name: 'asu' }]
+var INVEN_KONVERTER = [{ pk: 0, name: 'asu' }]
+var TABLE_VAR = {
+    AP_INIT: false,
+    INVEN_INIT: false,
+}
+var AREA = [{ pk: 0, name: 'cok', code: 'asu' }]

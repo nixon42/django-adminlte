@@ -71,10 +71,12 @@ accessPointModal.init();
 // inven table init
 // InventoryContent.init();
 inventoryContent();
+TABLE_VAR.AP_INIT = true;
 // console.log(InventoryContent.InventoryType.name);
 
 // ap table init
 accessPointTable();
+TABLE_VAR.INVEN_INIT = true;
 $("#content #ap-table-jsgrid").jsGrid('refreshData');
 
 // dashboard btn

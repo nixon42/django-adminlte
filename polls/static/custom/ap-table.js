@@ -31,7 +31,7 @@ var accessPointModal = {
 
         $.each(arr, (key, val) => {
             val.empty();
-            val.append('<option val=""></option>');
+            val.append('<option val="0"></option>');
         });
 
         $.each(this.optData, (key, val) => {
@@ -77,6 +77,7 @@ var accessPointModal = {
         let inputDom = this.inputDom;
         $.each(this.inputDom, function (key, val) {
             if (key == 'date') { return; }
+            if (val.is('select')) { val.val(0).change(); return; }
             val.val('');
         });
         $.each(this.defaultVal, function (key, val) {
@@ -102,12 +103,12 @@ var accessPointModal = {
         this.inputDom.area.attr('disabled', 'disabled');
         this.inputDom.rt.attr('disabled', 'disabled');
         this.inputDom.rw.attr('disabled', 'disabled');
-        this.modal.find('ap-table-tool-clone').toggleClass('d-none');
+        this.modal.find('.ap-table-modal-clone').removeClass('d-none');  
         this.modal.modal();
     },
     hide: function () {
         this.modal.modal('hide');
-        this.modal.find('ap-table-tool-clone').toggleClass('d-none');
+        this.modal.find('.ap-table-modal-clone').addClass('d-none');
     },
 }
 
@@ -337,7 +338,7 @@ function accessPointTable() {
             { name: "fields.wifi", type: "text", width: 100, headerTemplate: 'Wifi Name' },
             { name: "fields.outdoor", type: "checkbox", width: 80, headerTemplate: 'Outdoor' },
             { name: "fields.date", type: "text", width: 100, headerTemplate: 'Install Date' },
-            { name: "fields.area", type: "select", width: 100, headerTemplate: 'Area', items: area, valueField: "id", textField: "name" },
+            { name: "fields.area", type: "select", width: 100, headerTemplate: 'Area', items: AREA, valueField: "pk", textField: "code" },
             { name: "fields.rt", type: "number", width: 100, headerTemplate: 'RT' },
             { name: "fields.rw", type: "number", width: 100, headerTemplate: 'RW' },
             { name: "fields.fo", type: "checkbox", width: 60, headerTemplate: 'FO' },

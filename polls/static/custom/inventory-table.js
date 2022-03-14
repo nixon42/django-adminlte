@@ -8,6 +8,7 @@ class ModalObjTemplate {
         this.defaultVal;
         this.inputDom = {};
         this.loadDataCB = null;
+        this.cloneBtn = null;
     }
     set_prop(key, val) {
         this[key] = val;
@@ -29,10 +30,10 @@ class ModalObjTemplate {
         });
         // console.log(this.inputDom.name);
     }
-    save() {
+    save(opt = null) {
         console.log(`[${this.name}] save`);
         let data = {};
-        if (this.selectedItem != null) {
+        if (this.selectedItem != null && opt != 'clone') {
             data.pk = this.selectedItem.pk;
         }
         $.each(this.inputDom, (key, val) => {
@@ -60,6 +61,7 @@ class ModalObjTemplate {
         console.log(`[${this.name}] show new`);
         let $this = this;
         $.each(this.inputDom, (key, val) => {
+            if (val.is('select')) { val.val(0).change(); return; }
             val.val('');
         });
         $.each(this.defaultVal, (key, val) => {
@@ -81,10 +83,13 @@ class ModalObjTemplate {
             }
             val.val(item.fields[key]);
         });
+        console.log($(this.cloneBtn).log());
+        this.cloneBtn.removeClass('d-none');
         this.modal.modal();
     }
     hide() {
         console.log(`[${this.name}] hide`);
+        this.cloneBtn.addClass('d-none');
         this.modal.modal('hide');
     }
 }
@@ -143,6 +148,8 @@ class TableObjTemplate {
         _modalObj.input = this.modalInput;
         _modalObj.defaultVal = this.defaultVal;
         _modalObj.modal = this.modalSel;
+        _modalObj.cloneBtn = this.modalSel.find('.modal-clone-btn');
+        // console.log(this.modalSel.find('.modal-clone-btn').log());
         _modalObj.loadDataCB = this.refreshData.bind(this);
         _modalObj.init();
         this.modalObj = _modalObj;
@@ -153,13 +160,15 @@ class TableObjTemplate {
         $(this.jsgrid).jsGrid('loadData');
         this.refreshBtn = $(this._content).find('.tool-btn-refresh');
         this.addBtn = this._content.find('.tool-btn-add');
-        this.editBtn = this._content.find('.tool-btn-edit')
+        this.editBtn = this._content.find('.tool-btn-edit');
 
         // console.log(this.refreshBtn);
         this.refreshBtn.click(this.refreshData.bind(this));
         this.addBtn.click(this.modalObj.showNew.bind(this.modalObj));
         this.editBtn.click(this.showItem.bind(this));
-        this.modalSel.find('.modal-save-btn').click(this.modalObj.save.bind(this.modalObj));
+        var _modalSave = this.modalObj.save.bind(this.modalObj);
+        this.modalSel.find('.modal-save-btn').click(() => { _modalSave() });
+        this.modalSel.find('.modal-clone-btn').click(() => { _modalSave('clone'); });
         // this.addBtn.click(this.modalObj.showNew.bind(this.modalObj))
     }
 }
@@ -342,8 +351,76 @@ function inventoryContent() {
     };
     // console.log(INVEN_TYPE_DATA);
     Inventory.init();
-    // Inventory.jsgrid.find('.jsgrid-filter-row').children().eq(3).children().addClass('input-inven-t');
-    // InventoryType.globalVarUpdateCB(InventoryType.data);
+
+    var Area = new TableObjTemplate();
+    Area.name = 'Area';
+    Area.jsgrid = content.find('#area-table-jsgrid');
+    Area._content = content.find('#area-table');
+    Area.modalSel = content.find('.area-modal');
+    Area.dataUrl = '/getarea';
+    Area.insertUrl = '/addarea';
+    Area.globalVarUpdateCB = (data) => {
+        AREA = [];
+        AREA.push({ pk: 0, name: '' });
+        // console.log(data);
+        $('.input-area').empty();
+        $('.input-area').append('<option value="0"></option>');
+        $.each(Area.data, (key, val) => {
+            AREA.push({ pk: val.pk, name: val.fields.name, code: val.fields.code });
+            $('.input-area').append(`<option value="${val.pk}">${val.fields.code}</option>`);
+        });
+    };
+    Area.modalInput = {
+        name: '.input-name',
+        code: '.input-area-code'
+    };
+    Area.jsgridConfig = {
+        width: '100%',
+        sorting: true,
+        paging: true,
+        srinkToFit: false,
+        filtering: true,
+        autoload: false,
+        editing: false,
+        noDataContent: "No Data Found",
+
+        rowClick: function (arg) {
+            // console.log(arg);
+        },
+        rowDoubleClick: (arg) => {
+            // let $row = InventoryType.jsgrid.rowByItem(arg.item);
+            let $row = Area.jsgrid.find('.jsgrid-selected-row');
+            if ($row.hasClass("highlight")) {
+                $row.toggleClass("highlight");
+                Area.editBtn.addClass("d-none");
+                Area.selected = null;
+                return
+            }
+            if (Area.selected != null) { Area.selected.toggleClass("highlight"); }
+            $row.toggleClass("highlight");
+            Area.selected = $($row);
+            Area.selectedItem = arg.item;
+            Area.editBtn.removeClass("d-none");
+        },
+        fields: [
+            // { type: 'control', width: 40, editButton: false, deleteButton: false },
+            { name: 'pk', type: 'number', width: 50, headerTemplate: 'No' },
+            { name: 'fields.name', type: 'text', width: 150, headerTemplate: 'Name' },
+            { name: 'fields.code', type: 'text', width: 100, headerTemplate: 'Area Code' },
+        ],
+        controller: {
+            loadData: (filter) => {
+                return $.grep(Area.data, (data) => {
+                    return (!filter.pk || data.pk === filter.pk)
+                        && (!filter.fields.name || data.fields.name.indexOf(filter.fields.name) > -1)
+                        && (!filter.fields.code || data.fields.code.indexOf(filter.fields.code) > -1)
+                });
+            }
+        },
+    };
+    Area.init();
+
     TABLE_VAR.invent = InventoryType;
     TABLE_VAR.inven = Inventory;
+    TABLE_VAR.area = Area;
 }

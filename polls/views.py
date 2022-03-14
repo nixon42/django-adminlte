@@ -34,6 +34,36 @@ def getArea(req: HttpRequest):
     return JsonResponse({'return_code': 0, 'msg': 'ok', 'data': data})
 
 
+def addArea(req: HttpRequest):
+    print('cok')
+    print(req.POST)
+    if req.POST.__len__() > 3:
+        logging.warn(
+            f"Bad requset addArea from {req.META.get('REMOTE_ADDR')}")
+        return JsonResponse({'return_code': 400, 'msg': 'bad request data'})
+    try:
+        if req.POST.get('pk', False):
+            try:
+                area = Area.objects.get(pk=int(req.POST.get('pk')))
+            except Exception as e:
+                logging.error(f'cant get Area ,{e}')
+                return JsonResponse({'return_code': 500, 'msg': f'cant get item, LOG:{e}'})
+        else:
+            area = Area()
+        if req.POST.get('name', False):
+            area.name = req.POST.get('name')
+        else:
+            return JsonResponse({'return_code': 400, 'msg': 'Invalid Name'})
+
+        if req.POST.get('code', False):
+            area.code = str(req.POST.get('code')).upper()
+        else:
+            return JsonResponse({'return_code': 400, 'msg': 'Invalid Area Code'})
+        area.save()
+        return JsonResponse({'return_code': 0, 'msg': 'ok'})
+    except Exception as e:
+        logging.error(f'cant get Area ,{e}')
+        return JsonResponse({'return_code': 500, 'msg': f'cant add item, LOG:{e}'})
 def getInvenType(req: HttpRequest):
     data = serializers.serialize('json', InventoryType.objects.all())
     return JsonResponse({'return_code': 0, 'msg': 'ok', 'data': data})
@@ -48,7 +78,7 @@ def addInvenType(req: HttpRequest):
     print(req.POST)
     if req.POST.__len__() > 2:
         logging.warn(
-            f"Bad requset addArea from {req.META.get('REMOTE_ADDR')}")
+            f"Bad requset addInvenType from {req.META.get('REMOTE_ADDR')}")
         return JsonResponse({'return_code': 400, 'msg': 'bad request data'})
 
     try:
@@ -109,20 +139,20 @@ def addInven(req: HttpRequest):
         return JsonResponse({'return_code': 500, 'msg': f'cant add item, LOG: {e}'})
 
 
-def addArea(req: HttpRequest):
-    if req.POST.__len__() > 2 or req.POST.__len__() < 1:
-        logging.warn(
-            f"Bad requset addArea from {req.META.get('REMOTE_ADDR')}")
-        return JsonResponse({'return_code': 400, 'msg': 'bad request data'})
+# def addArea(req: HttpRequest):
+#     if req.POST.__len__() > 2 or req.POST.__len__() < 1:
+#         logging.warn(
+#             f"Bad requset addArea from {req.META.get('REMOTE_ADDR')}")
+#         return JsonResponse({'return_code': 400, 'msg': 'bad request data'})
 
-    try:
-        area = Area(name=req.POST.get('name'))
-        area.save()
-        return JsonResponse({'return_code': 0, 'msg': 'ok'})
-    except Exception as e:
-        logging.error(f'cant add new area, {e}')
-        return JsonResponse({'return_code': 500, 'msg': f'failed to add area, LOG: {e}'})
-        # logging
+#     try:
+#         area = Area(name=req.POST.get('name'))
+#         area.save()
+#         return JsonResponse({'return_code': 0, 'msg': 'ok'})
+#     except Exception as e:
+#         logging.error(f'cant add new area, {e}')
+#         return JsonResponse({'return_code': 500, 'msg': f'failed to add area, LOG: {e}'})
+#         # logging
 
 
 def addAccessPoint(req: HttpRequest):

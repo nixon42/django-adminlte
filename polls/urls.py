@@ -7,6 +7,7 @@ urlpatterns = [
     path('getap', views.getAccessPoint, name='getap'),
     path('addap', views.addAccessPoint, name='addap'),
     path('getarea', views.getArea, name='getarea'),
+    path('addarea', views.addArea, name='addarea'),
     path('getinvent', views.getInvenType, name='getInvenType'),
     path('addinvent', views.addInvenType, name='addInvenType'),
     path('getinven', views.getInven, name='getInven'),
