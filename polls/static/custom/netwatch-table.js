@@ -48,7 +48,7 @@ function netwatchContent() {
             loadData: (filter) => {
                 return $.grep(Netwatch.data, (data) => {
                     return (!filter.pk || data.pk === filter.pk)
-                        && (!filter.fields.ip || data.fields.name.indexOf(filter.fields.name) > -1)
+                        && (!filter.fields.ip || data.fields.ip.indexOf(filter.fields.ip) > -1)
                         && (filter.fields.up === undefined || data.fields.up === filter.fields.up)
                 });
             }
