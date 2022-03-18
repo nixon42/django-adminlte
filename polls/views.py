@@ -25,7 +25,13 @@ def dashboard(request: HttpRequest):
 
 
 def getAccessPoint(req: HttpRequest):
-    data = serializers.serialize('json', AccessPoint.objects.all())
+    data = serializers.serialize(
+        'json', AccessPoint.objects.all())
+    return JsonResponse({'return_code': 0, 'msg': 'ok', 'data': data})
+
+
+def getApUp(req: HttpRequest):
+    data = serializers.serialize('json', AccessPoint_UpLog.objects.all())
     return JsonResponse({'return_code': 0, 'msg': 'ok', 'data': data})
 
 

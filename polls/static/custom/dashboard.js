@@ -5,24 +5,36 @@ var contentSpace = $("#content");
 var cur_date = new Date();
 
 // button
-var dashboard3_btn = $('.dashboard3-btn');
-var dashboard2_btn = $('.dashboard2-btn');
+var tableMenuBtn = $('.table-menu');
+var reportMenuBtn = $('.report-menu');
+var customerMenuBtn = $('.customer-menu');
+// var dashboard3_btn = $('.dashboard3-btn');
+// var dashboard2_btn = $('.dashboard2-btn');
 var apTableBtn = $('.ap-table-btn');
 var invenTableBtn = $('.inven-table-btn');
+var areaTableBtn = $('.area-table-btn');
+var netwatchReportBtn = $('.netwatch-report-btn'); 1
+var monthlyCustomerBtn = $('.monthly-customer-btn');
+
+
 // var invenTableBtn = $('.inven-table-btn');
 
 
-// content
+// NOTE: content
+// table
 var apTableContent = $("#ap-table-content");
 var invenTableContent = $('#inventory-content');
+var areaTableContent = $('#area-content');
 var apTableModal = $("#ap-table-modal");
 
+// report
+var netwatchReportContent = $('#netwatch-content');
+
 // def
-var active = apTableBtn;
-var activeContent = apTableContent;
+var menu_active = reportMenuBtn;
+var submenu_active = netwatchReportBtn;
+var activeContent = netwatchReportContent;
 
-
-// test
 
 
 // init
@@ -37,8 +49,7 @@ $(".datepicker-input").datepicker({
 $(".datepicker-input").datepicker('setDate', new Date());
 
 
-
-// ap modal init
+// NOTE: ap modal init
 accessPointModal.table = "#content #ap-table-jsgrid";
 accessPointModal.modal = apTableModal;
 accessPointModal.input = {
@@ -68,52 +79,101 @@ accessPointModal.defaultVal = {
 };
 accessPointModal.init();
 
-// inven table init
-// InventoryContent.init();
-inventoryContent();
-TABLE_VAR.AP_INIT = true;
-// console.log(InventoryContent.InventoryType.name);
+netwatchContent();
+CONTENT_INIT.NETWATCH_INIT = true;
 
-// ap table init
-accessPointTable();
-TABLE_VAR.INVEN_INIT = true;
-$("#content #ap-table-jsgrid").jsGrid('refreshData');
 
-// dashboard btn
-$DOM.on('click', '.dashboard3-btn', function () {
-    console.log('dashboard3 clicked');
-    menu_select(dashboard3_btn);
-    dashboard3();
-});
-
-$DOM.on('click', '.dashboard2-btn', function () {
-    console.log('dashboard2 clicked');
-    menu_select(dashboard2_btn);
-    dashboard2();
-});
-
+// NOTE : btn event
+// table btn
 $DOM.on('click', '.ap-table-btn', function () {
-    // console.log('AP Table clicked');
-    if (!menu_select(apTableBtn, apTableContent)) { return }
+    console.log('AP Table clicked');
+    if (!submenu_select(apTableBtn, apTableContent)) { return }
+    menu_select(tableMenuBtn);
+    if (!CONTENT_INIT.INVEN_INIT) {
+        // inven table init
+        // InventoryContent.init();
+        inventoryContent();
+        CONTENT_INIT.INVEN_INIT = true;
+    }
+    if (!CONTENT_INIT.AREA_INIT) {
+        // area table init
+        areaContent();
+        CONTENT_INIT.AREA_INIT = true;
+    }
+    if (!CONTENT_INIT.AREA_INIT) {
+        // area table init
+        areaContent();
+        CONTENT_INIT.AREA_INIT = true;
+    }
+    if (!CONTENT_INIT.NETWATCH_INIT) {
+        netwatchContent();
+        CONTENT_INIT.NETWATCH_INIT = true;
+    }
+    if (!CONTENT_INIT.AP_INIT) {
+        // ap table init
+        accessPointTable();
+        $("#content #ap-table-jsgrid").jsGrid('refreshData');
+        CONTENT_INIT.AP_INIT = true;
+    }
 });
 
 $DOM.on('click', '.inven-table-btn', function () {
-    // console.log('dashboard2 clicked');
-    menu_select(invenTableBtn, invenTableContent);
+    console.log('inven clicked');
+    if (!submenu_select(invenTableBtn, invenTableContent)) { return };
+    menu_select(tableMenuBtn);
+    if (!CONTENT_INIT.INVEN_INIT) {
+        // inven table init
+        inventoryContent();
+        CONTENT_INIT.INVEN_INIT = true;
+    }
+});
+
+$DOM.on('click', '.area-table-btn', function () {
+    console.log('area clicked');
+    if (!submenu_select(areaTableBtn, areaTableContent)) { return };
+    menu_select(tableMenuBtn);
+    if (!CONTENT_INIT.AREA_INIT) {
+        // area table init
+        areaContent();
+        CONTENT_INIT.AREA_INIT = true;
+    }
     // dashboard2();
 });
 
-function menu_select(btn_item, content) {
-    if (active != btn_item) {
+// report btn
+$DOM.on('click', '.netwatch-report-btn', () => {
+    console.log('netwatch click');
+    if (!submenu_select(netwatchReportBtn, netwatchReportContent)) { return }
+    menu_select(reportMenuBtn);
+    if (!CONTENT_INIT.NETWATCH_INIT) {
+        netwatchContent();
+        CONTENT_INIT.NETWATCH_INIT = true;
+    }
+});
+
+
+// NOTE: switch menu
+function menu_select(btn_item) {
+    if (menu_active != btn_item) {
+        menu_active.removeClass('active');
+        btn_item.addClass('active');
+        menu_active = btn_item;
+        return true;
+    }
+    return false;
+}
+
+function submenu_select(btn_item, content) {
+    if (submenu_active != btn_item) {
         // let _content = content.clone(true, true);
         // contentSpace.empty();
         // contentSpace.append(_content);
         content.removeClass("d-none");
         activeContent.addClass('d-none');
         activeContent = content;
-        $(active).removeClass('active');
+        $(submenu_active).removeClass('active');
         $(btn_item).addClass('active');
-        active = btn_item;
+        submenu_active = btn_item;
         return true;
     }
     return false;

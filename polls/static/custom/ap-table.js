@@ -103,7 +103,7 @@ var accessPointModal = {
         this.inputDom.area.attr('disabled', 'disabled');
         this.inputDom.rt.attr('disabled', 'disabled');
         this.inputDom.rw.attr('disabled', 'disabled');
-        this.modal.find('.ap-table-modal-clone').removeClass('d-none');  
+        this.modal.find('.ap-table-modal-clone').removeClass('d-none');
         this.modal.modal();
     },
     hide: function () {
@@ -117,26 +117,6 @@ function accessPointTable() {
     var selected = null;
     var selectedItem = null;
     var editBtn = $(".ap-table-tool-btn-edit");
-    var router = [
-        { name: "", id: 0 },
-        { name: "TTLN300RT", id: 1 },
-        { name: "TTLN355RT", id: 2 },
-        // { name: "4FO2LAN", id: 3 },
-
-    ];
-    var konverter = [
-        { name: "", id: 0 },
-        { name: "4FO2LAN", id: 1 },
-        { name: "2FO2LAN", id: 2 },
-        { name: "1FO2LAN", id: 3 },
-        // let $row = InventoryType.jsgrid.rowByItem(arg.item);
-    ];
-
-    var area = [
-        { name: "", id: 0 },
-        { name: "MJT", id: 1 },
-        { name: "NGPL", id: 2 },
-    ];
 
     var data_ap = [
         {
@@ -221,24 +201,35 @@ function accessPointTable() {
                     toastr.error(`${result.return_code} : ${result.msg}`);
                     return;
                 }
-                // console.log(result.data[0].pk);
-                data_ap = JSON.parse(result.data);
+                // console.log(result.data);
+                let _data_ap = JSON.parse(result.data);
                 // console.log(data_ap[0]);
 
                 // this.loadData();
+                let data = [];
+                $.each(_data_ap, function (key, val) {
+                    // console.log(val.fields.code);
+                    $.each(NETWATCH_DATA, (key, nwval) => {
+                        if (nwval.pk == val.fields.up) {
+                            val.fields.up_data = nwval.fields.up;
+                        }
+                    });
+                    data.push(val.fields.code);
+                });
+                data_ap = _data_ap;
+                AP_DATA = _data_ap;
+                accessPointModal.optData = data;
+                accessPointModal.refreshOpt();
+                if (CONTENT_INIT.table.netwatch != undefined) {
+                    CONTENT_INIT.table.netwatch.refreshData();
+                }
             }).fail(function () {
-                toastr.error('failed to load data, contact admin');
+                data_ap = [];
+                toastr.error('failed to load ap data');
             }
             ).always(function () {
                 // console.log('always /getap');
-                let data = [];
                 jsgrid.jsGrid('loadData');
-                $.each(data_ap, function (key, val) {
-                    // console.log(val.fields.code);
-                    data.push(val.fields.code);
-                });
-                accessPointModal.optData = data;
-                accessPointModal.refreshOpt();
                 // this.loadData();
             });
         },
@@ -250,6 +241,7 @@ function accessPointTable() {
                     return (!filter.pk || data.pk === filter.pk)
                         && (!filter.fields.code || data.fields.code.indexOf(filter.fields.code) > -1)
                         && (!filter.fields.ip || data.fields.ip.indexOf(filter.fields.ip) > -1)
+                        && (filter.fields.up_data === undefined || data.fields.up_data === filter.fields.up_data)
                         && (!filter.fields.customer || data.fields.customer.indexOf(filter.fields.customer) > -1)
                         && (!filter.fields.phone || data.fields.phone.indexOf(filter.fields.phone) > -1)
                         && (!filter.fields._long || data.fields._long.indexOf(filter.fields._long) > -1)
@@ -331,6 +323,7 @@ function accessPointTable() {
             { name: "pk", type: "number", width: 80, headerTemplate: 'No' },
             { name: "fields.code", type: "text", width: 150, headerTemplate: 'Code' },
             { name: "fields.ip", type: "text", width: 200, headerTemplate: 'IP Addr' },
+            { name: "fields.up_data", type: "checkbox", width: 100, headerTemplate: 'Status(UP)' },
             { name: "fields.customer", type: "text", width: 200, headerTemplate: 'Customer' },
             { name: "fields.phone", type: "text", width: 150, headerTemplate: 'Phone' },
             { name: "fields._long", type: "text", width: 200, headerTemplate: 'Longatitude' },

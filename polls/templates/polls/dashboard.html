@@ -17,6 +17,8 @@ OrbitalLTE | Dashboard
 <script src="{% static 'custom/dashboard2.js' %}"></script>
 <script src="{% static 'custom/ap-table.js' %}"></script>
 <script src="{% static 'custom/inventory-table.js' %}"></script>
+<script src="{% static 'custom/area-table.js' %}"></script>
+<script src="{% static 'custom/netwatch-table.js' %}"></script>
 
 <!-- bootsrap-datepicker -->
 <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js'%}"></script>
@@ -85,7 +87,7 @@ OrbitalLTE | Dashboard
                             alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+                        <a href="#" class="d-block">Admin</a>
                     </div>
                 </div>
 
@@ -96,7 +98,7 @@ OrbitalLTE | Dashboard
                         <!-- Add icons to the links using the .nav-icon class
                        with font-awesome or any other icon font library -->
                         <!-- Dashboard -->
-                        <li class="nav-item has-treeview">
+                        <li class="nav-item has-treeview d-none">
                             <a href="#" class="nav-link disabled">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
@@ -124,9 +126,10 @@ OrbitalLTE | Dashboard
                                     </a>
                                 </li>
                             </ul>
-                            <!-- Table menu -->
+                        </li>
+                        <!-- Table menu -->
                         <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link active">
+                            <a href="#" class="nav-link table-menu">
                                 <i class="nav-icon fas fa-table"></i>
                                 <p>
                                     Tables
@@ -135,7 +138,7 @@ OrbitalLTE | Dashboard
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link active ap-table-btn">
+                                    <a href="#" class="nav-link ap-table-btn">
                                         <i class="fa fa-wifi nav-icon"></i>
                                         <p>Access Point</p>
                                     </a>
@@ -147,6 +150,12 @@ OrbitalLTE | Dashboard
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a href="#" class="nav-link area-table-btn">
+                                        <i class="fa fa-map-marker nav-icon"></i>
+                                        <p>Area</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="#" class="nav-link">
                                         <i class="fa fa-book nav-icon"></i>
                                         <p>Timeline</p>
@@ -154,17 +163,53 @@ OrbitalLTE | Dashboard
                                 </li>
                             </ul>
                         </li>
+                        <!-- Report menu -->
+                        <li class="nav-item has-treeview">
+                            <a class="nav-link report-menu active">
+                                <i class="nav-icon fas fa-file"></i>
+                                <p>
+                                    Report
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link active netwatch-report-btn">
+                                        <i class="fa fa-network-wired nav-icon"></i>
+                                        <p>Netwatch</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- Customer menu -->
+                        <li class="nav-item has-treeview">
+                            <a class="nav-link customer-menu">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    Customer
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link monthly-customer-btn">
+                                        <i class="fa fa-table nav-icon"></i>
+                                        <p>Monthly User</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
-
                 </nav>
                 <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
         </aside>
 
+        <!-- content -->
         <div class="content-wrapper" id="content">
             <!-- AP table -->
-            <div id="ap-table-content" class="">
+            <div id="ap-table-content" class="d-none">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <div class="container-fluid">
@@ -187,10 +232,6 @@ OrbitalLTE | Dashboard
                             tr.highlight td.jsgrid-cell {
                                 background-color: #e3ec95;
                             }
-
-                            /* .jsgrid-grid-header {
-                                        overflow: auto;
-                                    } */
                         </style>
                         <div class="card-header">
                             <h3 class="card-title">
@@ -211,13 +252,12 @@ OrbitalLTE | Dashboard
                                                 <i class=" fas fa-plus"></i>
                                             </a>
                                         </div>
-                                        <div class="col">
-                                            <a class="btn btn-block bg-warning ap-table-tool-btn-edit d-none"
-                                                data-toggle="tooltip" data-placement="top" title="Edit">
+                                        <div class="col  ap-table-tool-btn-edit d-none">
+                                            <a class="btn btn-block bg-warning" data-toggle="tooltip"
+                                                data-placement="top" title="Edit">
                                                 <i class=" fas fa-edit text-white"></i>
                                             </a>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
@@ -302,45 +342,11 @@ OrbitalLTE | Dashboard
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                 <button type="button" class="btn btn-warning d-none modal-clone-btn">Clone</button>
                                 <button type="button" class="btn btn-success modal-save-btn">Save</button>
-                                </div>
-                                </div>
-                                </div>
-                                </div>
-                                <!-- area modal -->
-                                <div class="modal fade area-modal">
-                                    <div class="modal-dialog modal-md modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <!-- header -->
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Area</h4>
-                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
-                                                        aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <!-- body -->
-                                            <div class="modal-body">
-                                                <form role="form">
-                                                    <!-- name -->
-                                                    <div class="pb-3">
-                                                        <label>Name</label>
-                                                        <input type="text" class="form-control input-name" placeholder="Area">
-                                                    </div>
-                                                    <!-- code -->
-                                                    <div class="pb-3">
-                                                        <label>Code</label>
-                                                        <input type="text" class="form-control input-area-code" placeholder="Area Code">
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <!-- footer -->
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                <button type="button" class="btn btn-warning d-none modal-clone-btn">Clone</button>
-                                                <button type="button" class="btn btn-success modal-save-btn">Save</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <div class="container-fluid">
@@ -391,9 +397,9 @@ OrbitalLTE | Dashboard
                                                             <i class=" fas fa-plus"></i>
                                                         </a>
                                                     </div>
-                                                    <div class="col">
-                                                        <a class="btn btn-block bg-warning tool-btn-edit d-none"
-                                                            data-toggle="tooltip" data-placement="top" title="Edit">
+                                                    <div class="col tool-btn-edit d-none">
+                                                        <a class="btn btn-block bg-warning " data-toggle="tooltip"
+                                                            data-placement="top" title="Edit">
                                                             <i class=" fas fa-edit text-white"></i>
                                                         </a>
                                                     </div>
@@ -429,9 +435,9 @@ OrbitalLTE | Dashboard
                                                             <i class=" fas fa-plus"></i>
                                                         </a>
                                                     </div>
-                                                    <div class="col">
-                                                        <a class="btn btn-block bg-warning tool-btn-edit d-none"
-                                                            data-toggle="tooltip" data-placement="top" title="Edit">
+                                                    <div class="col tool-btn-edit d-none">
+                                                        <a class="btn btn-block bg-warning" data-toggle="tooltip"
+                                                            data-placement="top" title="Edit">
                                                             <i class=" fas fa-edit text-white"></i>
                                                         </a>
                                                     </div>
@@ -447,8 +453,67 @@ OrbitalLTE | Dashboard
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </section>
+                <!-- /.card-body -->
+            </div>
+            <!-- Area -->
+            <div id="area-content" class="d-none">
+                <!-- area modal -->
+                <div class="modal fade area-modal">
+                    <div class="modal-dialog modal-md modal-dialog-centered">
+                        <div class="modal-content">
+                            <!-- header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Area</h4>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <!-- body -->
+                            <div class="modal-body">
+                                <form role="form">
+                                    <!-- name -->
+                                    <div class="pb-3">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control input-name" placeholder="Area">
+                                    </div>
+                                    <!-- code -->
+                                    <div class="pb-3">
+                                        <label>Code</label>
+                                        <input type="text" class="form-control input-area-code" placeholder="Area Code">
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-warning d-none modal-clone-btn">Clone</button>
+                                <button type="button" class="btn btn-success modal-save-btn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Area<h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item">Home</li>
+                                    <li class="breadcrumb-item active">Area</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="container">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-5">
                                 <!-- area -->
                                 <div class="card" id="area-table">
                                     <div class="card-header">
@@ -459,19 +524,19 @@ OrbitalLTE | Dashboard
                                             <div class="container">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <a class="btn btn-block bg-primary tool-btn-refresh" data-toggle="tooltip"
-                                                            data-placement="top" title="Refresh">
+                                                        <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                            data-toggle="tooltip" data-placement="top" title="Refresh">
                                                             <i class="fa fa-sync"></i>
                                                         </a>
                                                     </div>
                                                     <div class="col">
-                                                        <a class="btn btn-block bg-success tool-btn-add" data-toggle="tooltip"
-                                                            data-placement="top" title="Add">
+                                                        <a class="btn btn-block bg-success tool-btn-add"
+                                                            data-toggle="tooltip" data-placement="top" title="Add">
                                                             <i class=" fas fa-plus"></i>
                                                         </a>
                                                     </div>
-                                                    <div class="col">
-                                                        <a class="btn btn-block bg-warning tool-btn-edit d-none" data-toggle="tooltip"
+                                                    <div class="col  tool-btn-edit d-none">
+                                                        <a class="btn btn-block bg-warning" data-toggle="tooltip"
                                                             data-placement="top" title="Edit">
                                                             <i class=" fas fa-edit text-white"></i>
                                                         </a>
@@ -486,17 +551,231 @@ OrbitalLTE | Dashboard
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8"></div>
+                            <div class="col-md-7"></div>
                         </div>
                     </div>
-                    <!-- /.card-body -->
+                </section>
             </div>
-            </section>
-            <!-- ./inventory -->
-        </div>
-    </div>
-    <!-- /.content-wrapper -->
+            <!-- Netwatch -->
+            <div id="netwatch-content" class="">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Netwatch<h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item">Home</li>
+                                    <li class="breadcrumb-item active">Netwatch</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <!-- area -->
+                                <div class="card" id="netwatch-table">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <p class="text-center" style="font-size: 20px;">Netwatch</p>
+                                        </h3>
+                                        <div class="card-tools">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                            data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                            <i class="fa fa-sync"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col d-none">
+                                                        <a class="btn btn-block bg-success tool-btn-add d-none"
+                                                            data-toggle="tooltip" data-placement="top" title="Add">
+                                                            <i class=" fas fa-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col tool-btn-edit d-none">
+                                                        <a class=" btn btn-block bg-warning" data-toggle="tooltip"
+                                                            data-placement="top" title="Edit">
+                                                            <i class=" fas fa-edit text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-warning tool-btn-show-more"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="Show More Info">
+                                                            <i class="fa fa-info-circle text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div id="netwatch-table-jsgrid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- Monthly Usr -->
+            <div id="monthlyuser-content" class="d-none">
+                <!-- monthlu user modal -->
+                <div class="modal fade monthlyuser-modal">
+                    <div class="modal-dialog modal-md modal-dialog-centered">
+                        <div class="modal-content">
+                            <!-- header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">User</h4>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <!-- body -->
+                            <div class="modal-body">
+                                <form role="form">
+                                    <!-- name -->
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" class="form-control input-name" placeholder="Nama Customer">
+                                    </div>
+                                    <!-- name -->
+                                    <div class="form-group">
+                                        <label>Phone</label>
+                                        <input type="text" class="form-control input-phone" placeholder="Nomor HP">
+                                    </div>
+                                    <!-- name -->
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <input type="text" class="form-control input-addr" placeholder="Alamat jl/GG">
+                                    </div>
+                                    <!-- RT RW -->
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <label>RT</label>
+                                                    <input type="number" class="form-control input-rt" placeholder="RT">
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-group">
+                                                    <label>RW</label>
+                                                    <input type="number" class="form-control input-rw" placeholder="RW">
+                                                </div>
+                                            </div>
+                                            <div class="col-6"></div>
+                                        </div>
+                                    </div>
+                                    <!-- area -->
+                                    <div class="form-group">
+                                        <label>Area</label>
+                                        <input type="text" class="form-control input-area" placeholder="Area">
+                                    </div>
+                                    <!-- username -->
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" class="form-control input-username"
+                                            placeholder="Username Member">
+                                    </div>
+                                    <!-- password -->
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="text" class="form-control input-password"
+                                            placeholder="Password Member">
+                                    </div>
+                                    <!-- voucher -->
+                                    <div class="form-group">
+                                        <label>Voucher Code</label>
+                                        <input type="text" class="form-control input-password"
+                                            placeholder="Kode Voucher">
+                                    </div>
 
+                                </form>
+                            </div>
+                            <!-- footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-warning d-none modal-clone-btn">Clone</button>
+                                <button type="button" class="btn btn-success modal-save-btn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Area<h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item">Home</li>
+                                    <li class="breadcrumb-item active">MonthlyUser</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <!-- area -->
+                                <div class="card" id="area-table">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <p class="text-center" style="font-size: 20px;">Monthly User</p>
+                                        </h3>
+                                        <div class="card-tools">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                            data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                            <i class="fa fa-sync"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-success tool-btn-add"
+                                                            data-toggle="tooltip" data-placement="top" title="Add">
+                                                            <i class=" fas fa-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col  tool-btn-edit d-none">
+                                                        <a class="btn btn-block bg-warning" data-toggle="tooltip"
+                                                            data-placement="top" title="Edit">
+                                                            <i class=" fas fa-edit text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div id="monthly-user-table-jsgrid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- ./ content -->
+        </div>
+        <!-- /.content-wrapper -->
     </div>
     <!-- ap table modal -->
     <div class="modal fade" id="ap-table-modal">

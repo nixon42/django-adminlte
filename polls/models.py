@@ -94,14 +94,6 @@ class AccessPoint(models.Model):
         return self.code
 
     def new(data: dict, wifi=''):
-        # get ip
-        try:
-            socket.inet_aton(data.get('ip', ''))
-            upLog = AccessPoint_UpLog(ip=data.get("ip", ''))
-            upLog.save()
-        except socket.error:
-            raise Exception('ip')
-
         # get date
         # date = data.get('dateInstall', '')
 
@@ -130,11 +122,31 @@ class AccessPoint(models.Model):
         # add record
         if data.get('pk', False):
             try:
-                ap = AccessPoint.objects.get(pk=int(data['pk']))
+                ap: AccessPoint = AccessPoint.objects.get(pk=int(data['pk']))
+                # check if ip change
+                if data.get('ip', '') != ap.up.ip:
+                    ap.up.delete()
+                    # get ip
+                    try:
+                        socket.inet_aton(data.get('ip', ''))
+                        upLog = AccessPoint_UpLog(ip=data.get("ip"))
+                        upLog.save()
+                    except socket.error:
+                        raise Exception('ip')
+                    ap.up = upLog
+                    ap.ip = data.get('ip')
+
             except Exception as e:
                 logging.error(f'pk error, {e}')
                 raise Exception('item')
         else:
+            # get ip
+            try:
+                socket.inet_aton(data.get('ip', ''))
+                upLog = AccessPoint_UpLog(ip=data.get("ip"))
+                upLog.save()
+            except socket.error:
+                raise Exception('ip')
             # check rt rw val
             try:
                 rt = int(data.get('rt', ''))
@@ -158,13 +170,14 @@ class AccessPoint(models.Model):
                 rt=rt, rw=rw).count()
 
             ap = AccessPoint()
+            ap.ip = data.get('ip')
             ap.code = f"{area.code}{rt:02d}{rw:02d}{serial:02d}"
             ap.area = area
             ap.rt = rt
             ap.rw = rw
+            ap.up = upLog
 
         # set
-        ap.ip = data.get('ip')
         ap._long = data.get('_long', '')
         ap.lat = data.get('lat', '')
         ap.wifi = wifi
@@ -179,7 +192,6 @@ class AccessPoint(models.Model):
         ap.linkb2 = data.get('linkb2', '')
         ap.router = router
         ap.converter = converter
-        ap.up = upLog
         ap.note = data.get('note', '')
 
         ap.save()

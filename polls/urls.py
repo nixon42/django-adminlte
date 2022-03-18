@@ -12,5 +12,6 @@ urlpatterns = [
     path('addinvent', views.addInvenType, name='addInvenType'),
     path('getinven', views.getInven, name='getInven'),
     path('addinven', views.addInven, name='addInven'),
+    path('getapup', views.getApUp, name='getapup'),
     path('', views.dashboard, name='index'),
 ]
