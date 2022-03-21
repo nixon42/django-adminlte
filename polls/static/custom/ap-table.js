@@ -81,7 +81,7 @@ var accessPointModal = {
         let inputDom = this.inputDom;
         $.each(this.inputDom, function (key, val) {
             if (key == 'date') { return; }
-            if (val.is(':checkbox')) { val.prop('checked', 'false'); return; }
+            if (val.is('checkbox')) { val.prop('checked', 'false'); return; }
             if (val.is('select')) { val.val(0).change(); return; }
             val.val('');
         });
