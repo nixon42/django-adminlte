@@ -171,7 +171,7 @@ class AccessPoint(models.Model):
 
             # get serial
             serial = AccessPoint.objects.filter(
-                rt=rt, rw=rw).count()
+                rt=rt, rw=rw, area=area).count()
 
             ap = AccessPoint()
             ap.ip = data.get('ip')
