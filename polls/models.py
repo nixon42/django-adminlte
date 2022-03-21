@@ -86,12 +86,16 @@ class AccessPoint(models.Model):
     converter = models.ForeignKey(
         Inventory, blank=True, null=True, related_name='converterap', on_delete=models.SET_NULL)
     up = models.ForeignKey(AccessPoint_UpLog, blank=True,
-                           null=True, on_delete=models.SET_NULL)
+                           null=True, on_delete=models.CASCADE)
 
     note = models.TextField(max_length=250, blank=True, null=True)
 
     def __str__(self) -> str:
-        return self.code
+        return f'{self.code} - {self.customer}'
+
+    def delete(self, using: any = ..., keep_parents: bool = ...) -> tuple[int, dict[str, int]]:
+        return self.up.delete()
+        # return super().delete(using, keep_parents)
 
     def new(data: dict, wifi=''):
         # get date

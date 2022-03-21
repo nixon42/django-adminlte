@@ -21,6 +21,10 @@ var accessPointModal = {
             });
         });
 
+        this.modal.on('hidden.bs.modal', () => {
+            this.modal.find('.ap-table-modal-clone').addClass('d-none');
+        });
+
     },
     refreshOpt: function () {
         let arr = [
@@ -77,6 +81,7 @@ var accessPointModal = {
         let inputDom = this.inputDom;
         $.each(this.inputDom, function (key, val) {
             if (key == 'date') { return; }
+            if (val.is(':checkbox')) { val.prop('checked', 'false'); return; }
             if (val.is('select')) { val.val(0).change(); return; }
             val.val('');
         });
@@ -98,6 +103,7 @@ var accessPointModal = {
                 val.val(data.fields[key]).change();
                 return;
             }
+            if (val.is(':checkbox')) { val.prop('checked', data.fields[key]); return; };
             val.val(data.fields[key]);
         });
         this.inputDom.area.attr('disabled', 'disabled');
@@ -108,7 +114,6 @@ var accessPointModal = {
     },
     hide: function () {
         this.modal.modal('hide');
-        this.modal.find('.ap-table-modal-clone').addClass('d-none');
     },
 }
 
@@ -188,7 +193,10 @@ function accessPointTable() {
         // height: "100%", 
         width: "100%",
         refreshData: function () {
-            console.log('refresh Data');
+            console.log('refresh AP Data');
+            editBtn.addClass("d-none");
+            selected = null;
+            selectedItem = null;
             $.ajax({
                 url: '/getap',
                 dataType: 'json',
@@ -310,6 +318,7 @@ function accessPointTable() {
                 $row.toggleClass("highlight");
                 editBtn.addClass("d-none");
                 selected = null;
+                selectedItem = null;
                 return
             }
             if (selected != null) { selected.toggleClass("highlight"); }

@@ -43,6 +43,7 @@ function inventoryContent() {
                 $row.toggleClass("highlight");
                 InventoryType.editBtn.addClass("d-none");
                 InventoryType.selected = null;
+                InventoryType.selectedItem = null;
                 return
             }
             if (InventoryType.selected != null) { InventoryType.selected.toggleClass("highlight"); }
@@ -146,6 +147,7 @@ function inventoryContent() {
                 $row.toggleClass("highlight");
                 Inventory.editBtn.addClass("d-none");
                 Inventory.selected = null;
+                Inventory.selectedItem = null;
                 return
             }
             if (Inventory.selected != null) { Inventory.selected.toggleClass("highlight"); }

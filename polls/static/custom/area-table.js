@@ -42,6 +42,7 @@ function areaContent() {
                 $row.toggleClass("highlight");
                 Area.editBtn.addClass("d-none");
                 Area.selected = null;
+                Area.selectedItem = null;
                 return
             }
             if (Area.selected != null) { Area.selected.toggleClass("highlight"); }

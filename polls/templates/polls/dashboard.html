@@ -699,7 +699,64 @@ OrbitalLTE | Dashboard
                                         <input type="text" class="form-control input-password"
                                             placeholder="Kode Voucher">
                                     </div>
-
+                                    <!-- Start Date -->
+                                    <div class=" form-group">
+                                        <label>Start Date</label>
+                                        <div class="input-group date" data-provider="datepicker">
+                                            <style>
+                                                .datepicker,
+                                                .table-condensed {
+                                                    width: 300px;
+                                                    /* height: 300px; */
+                                                }
+                                            </style>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text fa fa-calendar"></span>
+                                            </div>
+                                            <input type="text" class="form-control datepicker-input input-sdate"
+                                                placeholder="Tanggal Mulai">
+                                        </div>
+                                    </div>
+                                    <!-- Amount -->
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Amount</label>
+                                                <input type="number" class="form-control input-amount"
+                                                    placeholder="Jumlah Pembelian">
+                                            </div>
+                                        </div>
+                                        <div class="col-6"></div>
+                                    </div>
+                                    <!-- Due Date -->
+                                    <div class=" form-group">
+                                        <label>Due Date</label>
+                                        <div class="input-group date" data-provider="datepicker">
+                                            <style>
+                                                .datepicker,
+                                                .table-condensed {
+                                                    width: 300px;
+                                                    /* height: 300px; */
+                                                }
+                                            </style>
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text fa fa-calendar"></span>
+                                            </div>
+                                            <input type="text" class="form-control datepicker-input input-ddate"
+                                                placeholder="Tanggal Mulai">
+                                        </div>
+                                    </div>
+                                    <!-- Bill -->
+                                    <div class="form-group">
+                                        <label>Bill</label>
+                                        <input type="number" class="form-control input-bill" placeholder="Tagihan">
+                                    </div>
+                                    <!-- Note -->
+                                    <div class="form-group">
+                                        <label>Note</label>
+                                        <textarea class="form-control input-note" rows="3"
+                                            placeholder="Enter Note Here"></textarea>
+                                    </div>
                                 </form>
                             </div>
                             <!-- footer -->
@@ -931,8 +988,11 @@ OrbitalLTE | Dashboard
                             </select>
                         </div>
                         <!-- Note -->
-                        <label>Note</label>
-                        <textarea class="form-control input-note" rows="3" placeholder="Enter Text Here"></textarea>
+                        <div class="form-group">
+                            <label>Note</label>
+                            <textarea class="form-control input-note" rows="3" placeholder="Enter Text Here"></textarea>
+                        </div>
+
                 </div>
                 <!-- modal footer -->
                 <div class="modal-footer">

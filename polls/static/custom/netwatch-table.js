@@ -30,6 +30,7 @@ function netwatchContent() {
                 $row.toggleClass("highlight");
                 // Netwatch.editBtn.addClass("d-none");
                 Netwatch.selected = null;
+                Netwatch.selectedItem = null;
                 return
             }
             if (Netwatch.selected != null) { Netwatch.selected.toggleClass("highlight"); }

@@ -137,9 +137,16 @@ class TableObjTemplate {
         this.selectedItem = null;
         this.globalVarUpdateCB = (item) => { };
         this.showMore = (arg) => { };
+        this.editBtn = null;
     }
     refreshData() {
         console.log(`[${this.name}] refresh data`);
+        // this.modalSel.find('.tool-btn-edit').addClass('d-none');
+        if (this.editBtn != null) {
+            this.editBtn.addClass('d-none');
+        }
+        this.selected = null;
+        this.selectedItem = null;
         $.ajax({
             url: this.dataUrl,
             method: 'GET',
@@ -167,7 +174,7 @@ class TableObjTemplate {
         console.log(`[${this.name}] init ...`);
         if (this.useEditModal) {
             let _modalObj = new ModalObjTemplate();
-            _modalObj.name = `${this.name}Modal`
+            _modalObj.name = `${this.name} Modal`
             _modalObj.table = this.jsgrid;
             _modalObj.insertUrl = this.insertUrl;
             _modalObj.input = this.modalInput;
@@ -177,6 +184,10 @@ class TableObjTemplate {
             _modalObj.loadDataCB = this.refreshData.bind(this);
             _modalObj.init();
             this.modalObj = _modalObj;
+
+            this.modalSel.on('hidden.bs.modal', () => {
+                this.cloneBtn.addClass('d-none');
+            });
 
             // modal btn
             var _modalSave = this.modalObj.save.bind(this.modalObj);
