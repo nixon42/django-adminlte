@@ -247,10 +247,10 @@ function accessPointTable() {
                 console.log('load Data');
                 return $.grep(data_ap, function (data) {
                     return (!filter.pk || data.pk === filter.pk)
-                        && (!filter.fields.code || data.fields.code.indexOf(filter.fields.code) > -1)
+                        && (!filter.fields.code || data.fields.code.toLowerCase().indexOf(filter.fields.code.toLowerCase()) > -1)
                         && (!filter.fields.ip || data.fields.ip.indexOf(filter.fields.ip) > -1)
                         && (filter.fields.up_data === undefined || data.fields.up_data === filter.fields.up_data)
-                        && (!filter.fields.customer || data.fields.customer.indexOf(filter.fields.customer) > -1)
+                        && (!filter.fields.customer || data.fields.customer.toLowerCase().indexOf(filter.fields.customer.toLowerCase()) > -1)
                         && (!filter.fields.phone || data.fields.phone.indexOf(filter.fields.phone) > -1)
                         && (!filter.fields._long || data.fields._long.indexOf(filter.fields._long) > -1)
                         && (!filter.fields.lat || data.fields.lat.indexOf(filter.fields.lat) > -1)
@@ -261,13 +261,13 @@ function accessPointTable() {
                         && (!filter.fields.rt || data.fields.rt === filter.fields.rt)
                         && (!filter.fields.rw || data.fields.rw === filter.fields.rw)
                         && (filter.fields.fo === undefined || data.fields.fo === filter.fields.fo)
-                        && (!filter.fields.linka || data.fields.linka.indexOf(filter.fields.linka) > -1)
-                        && (!filter.fields.linnkb || data.fields.linnkb.indexOf(filter.fields.linnkb) > -1)
-                        && (!filter.fields.linkb2 || data.fields.linkb2.indexOf(filter.fields.linkb2) > -1)
-                        && (!filter.fields.linka2 || data.fields.linka2.indexOf(filter.fields.linka2) > -1)
+                        && (!filter.fields.linka || data.fields.linka.toLowerCase().indexOf(filter.fields.linka.toLowerCase()) > -1)
+                        && (!filter.fields.linnkb || data.fields.linnkb.toLowerCase().indexOf(filter.fields.linnkb.toLowerCase()) > -1)
+                        && (!filter.fields.linkb2 || data.fields.linkb2.toLowerCase().indexOf(filter.fields.linkb2.toLowerCase()) > -1)
+                        && (!filter.fields.linka2 || data.fields.linka2.toLowerCase().indexOf(filter.fields.linka2.toLowerCase()) > -1)
                         && (!filter.fields.router || data.fields.router === filter.fields.router)
                         && (!filter.fields.converter || data.fields.converter === filter.fields.converter)
-                        && (!filter.fields.note || data.fields.note.indexOf(filter.fields.note) > -1)
+                        && (!filter.fields.note || data.fields.note.toLowerCase().indexOf(filter.fields.note.toLowerCase()) > -1)
                 });
             },
             insertItem: function (_item) {

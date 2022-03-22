@@ -61,8 +61,8 @@ function areaContent() {
             loadData: (filter) => {
                 return $.grep(Area.data, (data) => {
                     return (!filter.pk || data.pk === filter.pk)
-                        && (!filter.fields.name || data.fields.name.indexOf(filter.fields.name) > -1)
-                        && (!filter.fields.code || data.fields.code.indexOf(filter.fields.code) > -1)
+                        && (!filter.fields.name || data.fields.name.toLowerCase().indexOf(filter.fields.name.toLowerCase()) > -1)
+                        && (!filter.fields.code || data.fields.code.toLowerCase().indexOf(filter.fields.code.toLowerCase()) > -1)
                 });
             }
         },

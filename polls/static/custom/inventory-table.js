@@ -61,7 +61,7 @@ function inventoryContent() {
             loadData: (filter) => {
                 return $.grep(InventoryType.data, (data) => {
                     return (!filter.pk || data.pk === filter.pk)
-                        && (!filter.fields.name || data.fields.name.indexOf(filter.fields.name) > -1)
+                        && (!filter.fields.name || data.fields.name.toLowerCase().indexOf(filter.fields.name.toLowerCase()) > -1)
                 });
             }
         },
@@ -169,7 +169,7 @@ function inventoryContent() {
                 console.log(`[${Inventory.name}] Load data`);
                 return $.grep(Inventory.data, (data) => {
                     return (!filter.pk || data.pk === filter.pk)
-                        && (!filter.fields.name || data.fields.name.indexOf(filter.fields.name) > -1)
+                        && (!filter.fields.name || data.fields.name.toLowerCase().indexOf(filter.fields.name.toLowerCase()) > -1)
                         && (!filter.fields.type || data.fields.type === filter.fields.type)
                         && (!filter.fields.stock || data.fields.stock === filter.fields.stock)
                 });
