@@ -35,7 +35,7 @@ var accessPointModal = {
 
         $.each(arr, (key, val) => {
             val.empty();
-            val.append('<option val="0"></option>');
+            val.append('<option val=""></option>');
         });
 
         $.each(this.optData, (key, val) => {
@@ -214,7 +214,7 @@ function accessPointTable() {
                 // console.log(data_ap[0]);
 
                 // this.loadData();
-                let data = [];
+                SELECT_AP_DATA = [''];
                 $.each(_data_ap, function (key, val) {
                     // console.log(val.fields.code);
                     $.each(NETWATCH_DATA, (key, nwval) => {
@@ -222,11 +222,11 @@ function accessPointTable() {
                             val.fields.up_data = nwval.fields.up;
                         }
                     });
-                    data.push(val.fields.code);
+                    SELECT_AP_DATA.push(`${val.fields.code} - ${val.fields.customer}`);
                 });
                 data_ap = _data_ap;
                 AP_DATA = _data_ap;
-                accessPointModal.optData = data;
+                accessPointModal.optData = SELECT_AP_DATA;
                 accessPointModal.refreshOpt();
                 if (CONTENT_INIT.table.netwatch != undefined) {
                     CONTENT_INIT.table.netwatch.refreshData();
@@ -355,4 +355,9 @@ function accessPointTable() {
     });
     // $("#content #ap-table-jsgrid").jsGrid('refreshData');
     // $("#content #ap-table-jsgrid").jsGrid('loadData');
+}
+
+function apTest() {
+    SELECT_AP_DATA = [{ code: 'tel', name: 'name' }]
+
 }

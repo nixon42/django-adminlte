@@ -25,7 +25,9 @@ var monthlyCustomerBtn = $('.monthly-customer-btn');
 var apTableContent = $("#ap-table-content");
 var invenTableContent = $('#inventory-content');
 var areaTableContent = $('#area-content');
+var monthlyCustomerContent = $('#monthly-customer-content');
 var apTableModal = $("#ap-table-modal");
+
 
 // report
 var netwatchReportContent = $('#netwatch-content');
@@ -151,6 +153,15 @@ $DOM.on('click', '.netwatch-report-btn', () => {
     }
 });
 
+// monthly customer
+$DOM.on('click', 'monthly-customer-btn', () => {
+    console.log('monthly customer');
+    if (!submenu_select(monthlyCustomerBtn, monthlyCustomerContent)) { return }
+    menu_select(customerMenuBtn);
+    if (!CONTENT_INIT.MONTHLY_INIT) {
+        CONTENT_INIT.MONTHLY_INIT = true;
+    }
+});
 
 // NOTE: switch menu
 function menu_select(btn_item) {

@@ -628,14 +628,14 @@ OrbitalLTE | Dashboard
                 </section>
             </div>
             <!-- Monthly Usr -->
-            <div id="monthlyuser-content" class="d-none">
+            <div id="monthly-customer-content" class="d-none">
                 <!-- monthlu user modal -->
                 <div class="modal fade monthlyuser-modal">
                     <div class="modal-dialog modal-md modal-dialog-centered">
                         <div class="modal-content">
                             <!-- header -->
                             <div class="modal-header">
-                                <h4 class="modal-title">User</h4>
+                                <h4 class="modal-title">Monthly Customer</h4>
                                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
                                         aria-hidden="true">&times;</span>
                                 </button>
@@ -679,7 +679,10 @@ OrbitalLTE | Dashboard
                                     <!-- area -->
                                     <div class="form-group">
                                         <label>Area</label>
-                                        <input type="text" class="form-control input-area" placeholder="Area">
+                                        <select class="form-control input-area">
+                                            <option value=1>MJT</option>
+                                            <option value=2>NGML</option>
+                                        </select>
                                     </div>
                                     <!-- username -->
                                     <div class="form-group">
@@ -773,12 +776,13 @@ OrbitalLTE | Dashboard
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1>Area<h1>
+                                <h1> Monthly Customer
+                                </h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item">Home</li>
-                                    <li class="breadcrumb-item active">MonthlyUser</li>
+                                    <li class="breadcrumb-item active">MonthlyCustomer</li>
                                 </ol>
                             </div>
                         </div>
@@ -786,46 +790,41 @@ OrbitalLTE | Dashboard
                 </section>
                 <section class="content-body">
                     <div class="container">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <!-- area -->
-                                <div class="card" id="area-table">
-                                    <div class="card-header">
-                                        <h3 class="card-title">
-                                            <p class="text-center" style="font-size: 20px;">Monthly User</p>
-                                        </h3>
-                                        <div class="card-tools">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <a class="btn btn-block bg-primary tool-btn-refresh"
-                                                            data-toggle="tooltip" data-placement="top" title="Refresh">
-                                                            <i class="fa fa-sync"></i>
-                                                        </a>
-                                                    </div>
-                                                    <div class="col">
-                                                        <a class="btn btn-block bg-success tool-btn-add"
-                                                            data-toggle="tooltip" data-placement="top" title="Add">
-                                                            <i class=" fas fa-plus"></i>
-                                                        </a>
-                                                    </div>
-                                                    <div class="col  tool-btn-edit d-none">
-                                                        <a class="btn btn-block bg-warning" data-toggle="tooltip"
-                                                            data-placement="top" title="Edit">
-                                                            <i class=" fas fa-edit text-white"></i>
-                                                        </a>
-                                                    </div>
-                                                </div>
+                        <!-- Monthly Customer -->
+                        <div class="card" id="monthly-customer-table">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <p class="text-center" style="font-size: 20px;">Monthly Customer</p>
+                                </h3>
+                                <div class="card-tools">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                    data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                    <i class="fa fa-sync"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col">
+                                                <a class="btn btn-block bg-success tool-btn-add" data-toggle="tooltip"
+                                                    data-placement="top" title="Add">
+                                                    <i class=" fas fa-plus"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col  tool-btn-edit d-none">
+                                                <a class="btn btn-block bg-warning" data-toggle="tooltip"
+                                                    data-placement="top" title="Edit">
+                                                    <i class=" fas fa-edit text-white"></i>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body">
-                                        <div id="monthly-user-table-jsgrid"></div>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-7"></div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div id="monthly-customer-table-jsgrid"></div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -840,7 +839,7 @@ OrbitalLTE | Dashboard
             <div class="modal-content">
                 <!-- modal header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">Add New Record</h4>
+                    <h4 class="modal-title">Access Point</h4>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span>
                     </button>

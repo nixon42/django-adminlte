@@ -1,4 +1,8 @@
 var AP_DATA = [];
+var SELECT_AP_DATA = [
+    {},
+    { code: 'asu', name: 'gatel' }
+];
 var INVEN_TYPE_DATA = [
     { pk: 1, name: '1cok' },
     { pk: 2, name: '2cok' },
@@ -11,6 +15,7 @@ var CONTENT_INIT = {
     INVEN_INIT: false,
     AREA_INIT: false,
     NETWATCH_INIT: false,
+    MONTHLY_CUSTOMER: false,
     table: {}
 }
 var AREA = [{ pk: 0, name: 'cok', code: 'asu' }]
