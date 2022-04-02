@@ -3,6 +3,8 @@ from django.contrib.auth.models import User, Group
 import socket
 import logging
 
+import datetime
+
 logging = logging.getLogger(__name__)
 
 
@@ -59,7 +61,7 @@ class Area(models.Model):
 
 
 class AccessPoint(models.Model):
-    _createDate = models.DateTimeField(auto_now_add=True)
+    # _createDate = models.DateTimeField(auto_now_add=True)
     code = models.CharField(max_length=10, unique=True)
     ip = models.CharField(max_length=20)
     _long = models.CharField(max_length=20, blank=True, null=True)
@@ -69,7 +71,7 @@ class AccessPoint(models.Model):
     customer = models.CharField(max_length=25)
     outdoor = models.BooleanField()
     # date = models.DateTimeField(auto_now_add=True)
-    _date = models.TextField(max_length=15, blank=True, null=True)
+    #_date = models.TextField(max_length=15, blank=True, null=True)
     date = models.DateField(null=True, blank=True)
 
     area = models.ForeignKey(
@@ -103,7 +105,7 @@ class AccessPoint(models.Model):
         # date = data.get('dateInstall', '')
 
         # get router
-        logging.info('get router')
+        # logging.info('get router')
         _i = data.get('router', '')
         try:
             _i = int(_i)
@@ -114,7 +116,7 @@ class AccessPoint(models.Model):
             # raise Exception('router')
 
         # get converter
-        logging.info('get converter')
+        # logging.info('get converter')
         _i = data.get('converter', '')
         try:
             _i = int(_i)
@@ -124,6 +126,12 @@ class AccessPoint(models.Model):
             logging.error(f'converter error {e}')
             # raise Exception('converter')
 
+        # get date
+        try:
+            date = datetime.datetime.strptime(data.get('date', ''), '%Y-%m-%d')
+        except Exception as e:
+            date = datetime.datetime.now()
+            logging.error(f'date error, {e}')
         # add record
         if data.get('pk', False):
             try:
@@ -191,7 +199,7 @@ class AccessPoint(models.Model):
         ap.customer = data.get('customer', '')
         ap.phone = data.get('phone', '')
         ap.outdoor = True if data.get('outdoor', 'false') == 'true' else False
-        ap.date = data.get('date', '')
+        # ap.date = data.get('date', '')
         ap.fo = True if data.get('fo', 'false') == 'true' else False
         ap.linka = data.get('linka', '')
         ap.linkb = data.get('linkb', '')
