@@ -15,6 +15,12 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# django admin shell
+ADMIN_SHELL_ONLY_DEBUG_MODE = False
+
+# Date Format
+# DATE_INPUT_FORMAT = ['%d/%m/%Y']
+# DATE_FORMAT = ['%d/%m/%Y']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -37,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'polls.apps.PollsConfig',
-    'customer.apps.CustomerConfig'
+    'customer.apps.CustomerConfig',
+    'django_admin_shell'
 ]
 
 MIDDLEWARE = [
@@ -111,7 +118,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = False
 

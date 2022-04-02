@@ -1,31 +1,32 @@
-// global var
-
-var $DOM = $(document);
+// global va
 var contentSpace = $("#content");
-var cur_date = new Date();
 
 // button
 var tableMenuBtn = $('.table-menu');
 var reportMenuBtn = $('.report-menu');
+var homeMenuBtn = $('.home-menu');
 var customerMenuBtn = $('.customer-menu');
 // var dashboard3_btn = $('.dashboard3-btn');
 // var dashboard2_btn = $('.dashboard2-btn');
+var monthlyFormBtn = $('.monthly-form-btn');
 var apTableBtn = $('.ap-table-btn');
 var invenTableBtn = $('.inven-table-btn');
 var areaTableBtn = $('.area-table-btn');
 var netwatchReportBtn = $('.netwatch-report-btn'); 1
 var monthlyCustomerBtn = $('.monthly-customer-btn');
+var monthlyPlanBtn = $('.monthly-plan-btn');
 
 
 // var invenTableBtn = $('.inven-table-btn');
 
-
 // NOTE: content
 // table
+var monthlyFormContent = $('#monthly-form-content');
 var apTableContent = $("#ap-table-content");
 var invenTableContent = $('#inventory-content');
 var areaTableContent = $('#area-content');
 var monthlyCustomerContent = $('#monthly-customer-content');
+var monthlyPlanContent = $('#monthly-plan-content');
 var apTableModal = $("#ap-table-modal");
 
 
@@ -33,16 +34,14 @@ var apTableModal = $("#ap-table-modal");
 var netwatchReportContent = $('#netwatch-content');
 
 // def
-var menu_active = reportMenuBtn;
-var submenu_active = netwatchReportBtn;
-var activeContent = netwatchReportContent;
-
-
+var menu_active = homeMenuBtn;
+var submenu_active = monthlyFormBtn;
+var activeContent = monthlyFormContent;
 
 // init
 $('[data-toggle="tooltip"]').tooltip();
 $(".datepicker-input").datepicker({
-    format: 'dd/mm/yyyy',
+    format: 'yyyy-mm-dd',
     // container: container,
     autoclose: true,
     todayHighlight: true,
@@ -81,8 +80,12 @@ accessPointModal.defaultVal = {
 };
 accessPointModal.init();
 
-netwatchContent();
-CONTENT_INIT.NETWATCH_INIT = true;
+// NOTE: INIT
+getcustomer();
+getplan();
+monthlyForm();
+// netwatchContent();
+// CONTENT_INIT.NETWATCH_INIT = true;
 
 
 // NOTE : btn event
@@ -130,10 +133,45 @@ $DOM.on('click', '.inven-table-btn', function () {
     }
 });
 
+$DOM.on('click', '.monthly-form-btn', function () {
+    console.log('monthly customer clicked');
+    if (!submenu_select(monthlyFormBtn, monthlyFormContent)) { return };
+    menu_select(homeMenuBtn);
+    getcustomer();
+    getplan();
+    if (!CONTENT_INIT.MONTHLY_FORM) {
+        monthlyForm();
+        CONTENT_INIT.MONTHLY_FORM = true;
+    }
+});
+
+$DOM.on('click', '.monthly-customer-btn', function () {
+    console.log('monthly customer clicked');
+    if (!submenu_select(monthlyCustomerBtn, monthlyCustomerContent)) { return };
+    menu_select(customerMenuBtn);
+    getarea();
+    getap();
+    if (!CONTENT_INIT.MONTHLY_CUSTOMER) {
+        monthlyCustomer();
+        CONTENT_INIT.MONTHLY_CUSTOMER = true;
+    }
+});
+
+$DOM.on('click', '.monthly-plan-btn', function () {
+    console.log('monthly plan clicked');
+    if (!submenu_select(monthlyPlanBtn, monthlyPlanContent)) { return };
+    menu_select(customerMenuBtn);
+    if (!CONTENT_INIT.MONTHLY_PLAN) {
+        // inven table init
+        MonthlyPlan();
+        CONTENT_INIT.MONTHLY_PLAN = true;
+    }
+});
+
 $DOM.on('click', '.area-table-btn', function () {
     console.log('area clicked');
     if (!submenu_select(areaTableBtn, areaTableContent)) { return };
-    menu_select(tableMenuBtn);
+    menu_select(areaTableBtn);
     if (!CONTENT_INIT.AREA_INIT) {
         // area table init
         areaContent();

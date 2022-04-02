@@ -26,12 +26,13 @@ def dashboard(request: HttpRequest):
 
 def getAccessPoint(req: HttpRequest):
     data = serializers.serialize(
-        'json', AccessPoint.objects.all())
+        'json', AccessPoint.objects.all().order_by('pk'))
     return JsonResponse({'return_code': 0, 'msg': 'ok', 'data': data})
 
 
 def getApUp(req: HttpRequest):
-    data = serializers.serialize('json', AccessPoint_UpLog.objects.all())
+    data = serializers.serialize(
+        'json', AccessPoint_UpLog.objects.all().order_by('pk'))
     return JsonResponse({'return_code': 0, 'msg': 'ok', 'data': data})
 
 
@@ -68,7 +69,7 @@ def addArea(req: HttpRequest):
         area.save()
         return JsonResponse({'return_code': 0, 'msg': 'ok'})
     except Exception as e:
-        logging.error(f'cant get Area ,{e}')
+        logging.error(f'cant add Area ,{e}')
         return JsonResponse({'return_code': 500, 'msg': f'cant add item, LOG:{e}'})
 
 
@@ -78,7 +79,8 @@ def getInvenType(req: HttpRequest):
 
 
 def getInven(req: HttpRequest):
-    data = serializers.serialize('json', Inventory.objects.all())
+    data = serializers.serialize(
+        'json', Inventory.objects.all().order_by('pk'))
     return JsonResponse({'return_code': 0, 'msg': 'ok', 'data': data})
 
 

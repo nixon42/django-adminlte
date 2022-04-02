@@ -1,25 +1,178 @@
+var cur_date = new Date();
+let dt = luxon.DateTime.local();
+var $DOM = $(document);
 var AP_DATA = [];
 var SELECT_AP_DATA = [
-    {},
-    { code: 'asu', name: 'gatel' }
+    '',
+    'MJTASU'
 ];
 var INVEN_TYPE_DATA = [
     { pk: 1, name: '1cok' },
     { pk: 2, name: '2cok' },
     { pk: 3, name: '3cok' },
-]
-var INVEN_ROUTER = [{ pk: 0, name: 'asu' }]
-var INVEN_KONVERTER = [{ pk: 0, name: 'asu' }]
+];
+var INVEN_ROUTER = [{ pk: 0, name: 'asu' }];
+var INVEN_KONVERTER = [{ pk: 0, name: 'asu' }];
 var CONTENT_INIT = {
     AP_INIT: false,
     INVEN_INIT: false,
     AREA_INIT: false,
     NETWATCH_INIT: false,
     MONTHLY_CUSTOMER: false,
+    MONTHLY_PLAN: false,
+    MONTHLY_FORM: false,
     table: {}
+};
+var AREA = [{ pk: 0, name: 'cok', code: 'asu' }];
+var NETWATCH_DATA = [{}];
+var MONTHLY_PLAN_SELECT = [];
+var MONTHLY_PLAN = [];
+var MONTHLY_CUSTOMER = []
+
+var API_URL = {
+    ap: {
+        get: '/getap',
+        add: '/addap'
+    },
+    netwatch: {
+        get: '/getapup'
+    },
+    invent: {
+        get: '/getinvent',
+        add: '/addinvent'
+    },
+    inven: {
+        get: '/getinven',
+        add: '/addinven'
+    },
+    area: {
+        get: '/getarea',
+        add: '/addarea'
+    },
+    customer_plan: {
+        get: '/customer/getplan',
+        add: '/customer/addplan'
+    },
+    monthly_customer: {
+        get: '/customer/getmonthly',
+        add: '/customer/addmonthly',
+        form: '/customer/subcribe'
+    }
 }
-var AREA = [{ pk: 0, name: 'cok', code: 'asu' }]
-var NETWATCH_DATA = [{}]
+
+function getcustomer() {
+    $.ajax({
+        url: API_URL.monthly_customer.get,
+        method: 'GET',
+        dataType: 'json',
+    }).fail(() => {
+        toastr.error(`failed to get customer data`);
+    }).done((res) => {
+        toastr.success(`done load customer data `);
+        // console.log();
+        let data = JSON.parse(res.data);
+        MONTHLY_CUSTOMER = data;
+        // AREA.push({ pk: 0, name: '', code: '' });
+        // console.log(data);
+        $('.input-customer-select').empty();
+        $('.input-customer-select').append('<option value=""></option>');
+        $.each(data, (key, val) => {
+            // AREA.push({ pk: val.pk, name: val.fields.name, code: val.fields.code });
+            $('.input-customer-select').append(`<option value="${val.pk}">${val.fields.code} - ${val.fields.name}</option>`);
+        });
+        // console.log(this.data);
+    });
+}
+
+function getarea() {
+    $.ajax({
+        url: API_URL.area.get,
+        method: 'GET',
+        dataType: 'json',
+    }).fail(() => {
+        toastr.error(`failed to get data for ${this.name}`);
+    }).done((res) => {
+        toastr.success(`done load data ${this.name}`);
+        let data = JSON.parse(res.data);
+        AREA = [];
+        AREA.push({ pk: 0, name: '', code: '' });
+        // console.log(data);
+        $('.input-area').empty();
+        $('.input-area').append('<option value=""></option>');
+        $.each(data, (key, val) => {
+            AREA.push({ pk: val.pk, name: val.fields.name, code: val.fields.code });
+            $('.input-area').append(`<option value="${val.pk}">${val.fields.code}</option>`);
+        });
+        // console.log(this.data);
+    });
+
+}
+function getnetwatch() {
+    $.ajax({
+        url: API_URL.netwatch.get,
+        method: 'GET',
+        dataType: 'json',
+    }).fail(() => {
+        toastr.error(`failed to get data for ${this.name}`);
+    }).done((res) => {
+        toastr.success(`done load data ${this.name}`);
+        let data = JSON.parse(res.data);
+        NETWATCH_DATA = data;
+        // console.log(this.data);
+    });
+}
+
+function getplan() {
+    $.ajax({
+        url: API_URL.customer_plan.get,
+        method: 'GET',
+        dataType: 'json',
+    }).fail(() => {
+        toastr.error(`failed to get data for plan`);
+    }).done((res) => {
+        toastr.success(`done load data plan`);
+        let data = JSON.parse(res.data);
+        MONTHLY_PLAN = data;
+        MONTHLY_PLAN_SELECT = [];
+        MONTHLY_PLAN_SELECT.push({ pk: 0, name: '', code: '' });
+        // console.log(data);
+        $('.input-monthly-plan').empty();
+        $('.input-monthly-plan').append('<option value="0"></option>');
+        $.each(data, (key, val) => {
+            MONTHLY_PLAN_SELECT.push({ pk: val.pk, name: val.fields.name, code: val.fields.code });
+            $('.input-monthly-plan').append(`<option data-duration="${val.fields.duration}" value="${val.pk}">${val.fields.code}</option>`);
+        });
+        // console.log(this.data);
+    });
+}
+function getap() {
+    $.ajax({
+        url: '/getap',
+        dataType: 'json',
+        // async: false,
+        method: 'GET',
+
+    }).done(function (result) {
+        let el = $('.input-ap');
+        if (result.return_code != 0) {
+            toastr.error(`${result.return_code} : ${result.msg}`);
+            return;
+        }
+        AP_DATA = JSON.parse(result.data);
+
+        SELECT_AP_DATA = [''];
+        el.empty();
+        el.append('<option val=""></option>');
+        $.each(AP_DATA, function (key, val) {
+            // console.log(val.fields.code);
+            el.append(`<option val="${val.fields.code}-${val.fields.customer}">${val.fields.code}-${val.fields.customer}</option>`);
+            SELECT_AP_DATA.push(`${val.fields.code} - ${val.fields.customer}`);
+        });
+    }).fail(function () {
+        toastr.error('failed to load ap data');
+    }
+    );
+}
 
 class ModalObjTemplate {
     constructor() {
@@ -28,7 +181,7 @@ class ModalObjTemplate {
         this.insertUrl;
         this.modal;
         this.input;
-        this.defaultVal;
+        this.defaultVal = {};
         this.inputDom = {};
         this.loadDataCB = null;
         this.cloneBtn = null;
@@ -64,7 +217,6 @@ class ModalObjTemplate {
         });
 
         // console.log(this.inputDom.type.find(':selected').data('val'));
-
         $.ajax({
             url: this.insertUrl,
             data: data,
@@ -85,10 +237,11 @@ class ModalObjTemplate {
         let $this = this;
         $.each(this.inputDom, (key, val) => {
             if (val.is('select')) { val.val(0).change(); return; }
+            if (val.is('checkbox')) { val.prop('checked', 'false'); return; }
             val.val('');
         });
         $.each(this.defaultVal, (key, val) => {
-            $this.inputDom[key].val(val);
+            this.inputDom[key].val(val);
         });
         this.modal.modal();
     }
@@ -123,7 +276,6 @@ $.fn.log = function () {
 };
 
 class TableObjTemplate {
-    // TODO: this refresh
     constructor() {
         this.name;
         this._content;
@@ -191,7 +343,7 @@ class TableObjTemplate {
             this.modalObj = _modalObj;
 
             this.modalSel.on('hidden.bs.modal', () => {
-                this.cloneBtn.addClass('d-none');
+                _modalObj.cloneBtn.addClass('d-none');
             });
 
             // modal btn

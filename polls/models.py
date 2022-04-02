@@ -3,6 +3,8 @@ from django.contrib.auth.models import User, Group
 import socket
 import logging
 
+logging = logging.getLogger(__name__)
+
 
 # NOTE: permission
 class Permission(models.Model):
@@ -50,7 +52,7 @@ class AccessPoint_UpLog(models.Model):
 
 class Area(models.Model):
     name = models.CharField(max_length=15)
-    code = models.CharField(max_length=5)
+    code = models.CharField(max_length=5, unique=True)
 
     def __str__(self):
         return f'{self.name} - {self.code}'
@@ -67,7 +69,8 @@ class AccessPoint(models.Model):
     customer = models.CharField(max_length=25)
     outdoor = models.BooleanField()
     # date = models.DateTimeField(auto_now_add=True)
-    date = models.TextField(max_length=15, blank=True, null=True)
+    _date = models.TextField(max_length=15, blank=True, null=True)
+    date = models.DateField(null=True, blank=True)
 
     area = models.ForeignKey(
         Area, blank=True, null=True, related_name="aparea", on_delete=models.SET_NULL)
@@ -169,7 +172,9 @@ class AccessPoint(models.Model):
 
             # get serial
             serial = AccessPoint.objects.filter(
-                rt=rt, rw=rw, area=area).count()
+                rt=rt, rw=rw, area=area).order_by('-id').first()
+
+            serial = int(serial[-2:]) + 1 if serial != None else 0
 
             ap = AccessPoint()
             ap.ip = data.get('ip')

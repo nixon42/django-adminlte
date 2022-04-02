@@ -1,6 +1,9 @@
 .venv
+*/migrations/*
 db.sqlite3
 __pycache__
 polls/templates/polls/AdminLTE-3.0.5
 .vscode
 *.log
+
+note
