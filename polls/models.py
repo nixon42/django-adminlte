@@ -182,7 +182,7 @@ class AccessPoint(models.Model):
             serial = AccessPoint.objects.filter(
                 rt=rt, rw=rw, area=area).order_by('-id').first()
 
-            serial = int(serial[-2:]) + 1 if serial != None else 0
+            serial = int(serial.code[-2:]) + 1 if serial != None else 0
 
             ap = AccessPoint()
             ap.ip = data.get('ip')
