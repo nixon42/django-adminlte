@@ -65,6 +65,7 @@ function getcustomer() {
         url: API_URL.monthly_customer.get,
         method: 'GET',
         dataType: 'json',
+        async: false,
     }).fail(() => {
         toastr.error(`failed to get customer data`);
     }).done((res) => {
@@ -89,6 +90,8 @@ function getarea() {
         url: API_URL.area.get,
         method: 'GET',
         dataType: 'json',
+        async: false,
+
     }).fail(() => {
         toastr.error(`failed to get data for ${this.name}`);
     }).done((res) => {
@@ -112,6 +115,8 @@ function getnetwatch() {
         url: API_URL.netwatch.get,
         method: 'GET',
         dataType: 'json',
+        async: false,
+
     }).fail(() => {
         toastr.error(`failed to get data for ${this.name}`);
     }).done((res) => {
@@ -127,6 +132,8 @@ function getplan() {
         url: API_URL.customer_plan.get,
         method: 'GET',
         dataType: 'json',
+        async: false,
+
     }).fail(() => {
         toastr.error(`failed to get data for plan`);
     }).done((res) => {
@@ -149,7 +156,7 @@ function getap() {
     $.ajax({
         url: '/getap',
         dataType: 'json',
-        // async: false,
+        async: false,
         method: 'GET',
 
     }).done(function (result) {
