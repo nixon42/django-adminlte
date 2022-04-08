@@ -20,23 +20,23 @@ class MonthlyCustomer(models.Model):
     active = models.BooleanField(default=True)
     code = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=20, default='No Name')
-    phone = models.CharField(max_length=15, null=True, blank=True)
-    addr = models.CharField(max_length=50, null=True, blank=True)
+    phone = models.CharField(max_length=15, default='')
+    addr = models.CharField(max_length=50, default='')
     rt = models.IntegerField(default=0)
     rw = models.IntegerField(default=0)
     area = models.ForeignKey(
         Area, on_delete=models.PROTECT, null=True, blank=True)
-    ap = models.CharField(max_length=20, null=True, blank=True)
+    ap = models.CharField(max_length=20, default='')
     plan: MonthlyPlan = models.ForeignKey(
         MonthlyPlan, on_delete=models.PROTECT, null=True, blank=True)
-    username = models.CharField(max_length=12, null=True, blank=True)
-    password = models.CharField(max_length=12, null=True, blank=True)
-    voucher = models.CharField(max_length=12, null=True, blank=True)
+    username = models.CharField(max_length=12, default='')
+    password = models.CharField(max_length=12, default='')
+    voucher = models.CharField(max_length=12, default='')
     sdate = models.DateField()
     ddate = models.DateField()
     bill = models.IntegerField(default=0)
     paid = models.BooleanField(default=False)
-    note = models.TextField(max_length=250, null=True, blank=True)
+    note = models.TextField(max_length=250, default='')
 
     def __str__(self) -> str:
         return f'{self.name}  RT{self.rt} RW{self.rw}'
@@ -87,8 +87,8 @@ class MonthlyCustomer(models.Model):
             monthlyCustomer = MonthlyCustomer()
 
         monthlyCustomer.name = data.get('name', 'No Name')
-        monthlyCustomer.phone = data.get('phone', None)
-        monthlyCustomer.addr = data.get('addr', None)
+        monthlyCustomer.phone = data.get('phone', '')
+        monthlyCustomer.addr = data.get('addr', '')
 
         # check rt or rw
         try:
@@ -121,9 +121,9 @@ class MonthlyCustomer(models.Model):
             logging.error(f'cant get area, {e}')
             monthlyCustomer.area = None
 
-        monthlyCustomer.username = data.get('username', None)
-        monthlyCustomer.password = data.get('password', None)
-        monthlyCustomer.voucher = data.get('voucher', None)
+        monthlyCustomer.username = data.get('username', '')
+        monthlyCustomer.password = data.get('password', '')
+        monthlyCustomer.voucher = data.get('voucher', '')
 
         # get sdate
         try:
@@ -154,7 +154,7 @@ class MonthlyCustomer(models.Model):
             logging.warn(f'cant parse bill, {e}')
 
         monthlyCustomer.paid = True if monthlyCustomer.bill == 0 else False
-        monthlyCustomer.note = data.get('note', None)
+        monthlyCustomer.note = data.get('note', '')
         try:
             monthlyCustomer.save()
             return monthlyCustomer

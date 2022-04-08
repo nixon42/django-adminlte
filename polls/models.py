@@ -64,26 +64,26 @@ class AccessPoint(models.Model):
     # _createDate = models.DateTimeField(auto_now_add=True)
     code = models.CharField(max_length=10, unique=True)
     ip = models.CharField(max_length=20)
-    _long = models.CharField(max_length=20, blank=True, null=True)
-    lat = models.CharField(max_length=20, blank=True, null=True)
-    phone = models.CharField(max_length=15, blank=True, null=True)
+    _long = models.CharField(max_length=20, default='')
+    lat = models.CharField(max_length=20, default='')
+    phone = models.CharField(max_length=15, default='')
     wifi = models.CharField(max_length=10)
     customer = models.CharField(max_length=25)
     outdoor = models.BooleanField()
     # date = models.DateTimeField(auto_now_add=True)
     #_date = models.TextField(max_length=15, blank=True, null=True)
-    date = models.DateField(null=True, blank=True)
+    date = models.DateField(default=datetime.datetime.now())
 
     area = models.ForeignKey(
-        Area, blank=True, null=True, related_name="aparea", on_delete=models.SET_NULL)
+        Area, default=1, related_name="aparea", on_delete=models.PROTECT)
     rt = models.IntegerField()
     rw = models.IntegerField()
 
     fo = models.BooleanField()
-    linka = models.CharField(max_length=15, blank=True, null=True)
-    linkb = models.CharField(max_length=15, blank=True, null=True)
-    linka2 = models.CharField(max_length=15, blank=True, null=True)
-    linkb2 = models.CharField(max_length=15, blank=True, null=True)
+    linka = models.CharField(max_length=45, default='')
+    linkb = models.CharField(max_length=45, default='')
+    linka2 = models.CharField(max_length=45, default='')
+    linkb2 = models.CharField(max_length=45, default='')
     router = models.ForeignKey(
         Inventory, blank=True, null=True, related_name='routerap', on_delete=models.SET_NULL)
     converter = models.ForeignKey(
@@ -91,7 +91,7 @@ class AccessPoint(models.Model):
     up = models.ForeignKey(AccessPoint_UpLog, blank=True,
                            null=True, on_delete=models.CASCADE)
 
-    note = models.TextField(max_length=250, blank=True, null=True)
+    note = models.TextField(max_length=250, default='')
 
     def __str__(self) -> str:
         return f'{self.code} - {self.customer}'
@@ -199,7 +199,7 @@ class AccessPoint(models.Model):
         ap.customer = data.get('customer', '')
         ap.phone = data.get('phone', '')
         ap.outdoor = True if data.get('outdoor', 'false') == 'true' else False
-        # ap.date = data.get('date', '')
+        ap.date = date
         ap.fo = True if data.get('fo', 'false') == 'true' else False
         ap.linka = data.get('linka', '')
         ap.linkb = data.get('linkb', '')
