@@ -33,6 +33,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# Rest framework
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer',)
+}
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,7 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'polls.apps.PollsConfig',
     'customer.apps.CustomerConfig',
-    'django_admin_shell'
+    'django_admin_shell',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

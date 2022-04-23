@@ -7,9 +7,38 @@ OrbitalLTE | Dashboard
 
 {% block script %}
 {{ block.super }}
-<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>
+<!-- InputMask -->
+<script src="{% static 'plugins/moment/moment.min.js' %}"></script>
+<script src="{% static 'plugins/inputmask/min/jquery.inputmask.bundle.min.js' %}"></script>
+
+<!-- date-range-picker -->
+<script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
+
+<!-- <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script> -->
 <!-- luxon -->
 <script src="{% static 'plugins/luxon/luxon.min.js' %}"></script>
+
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
+<script>
+    let format = "YYYY-MM-DD";
+    $('.select2bs4').select2({
+        theme: 'bootstrap4'
+    });
+    //Date range picker
+    $('.date').datetimepicker({
+        format: format,
+    });
+    $('.daterange')
+    $('.daterange').daterangepicker({
+        locale: {
+            format: format,
+        },
+        startDate: moment().startOf('month'),
+        endDate: moment().endOf('month')
+    });
+</script>
 
 <!-- custom -->
 <script src="{% static 'custom/global.js' %}"></script>
@@ -23,33 +52,46 @@ OrbitalLTE | Dashboard
 <script src="{% static 'custom/netwatch-table.js' %}"></script>
 <script src="{% static 'custom/monthly-plan-table.js' %}"></script>
 <script src="{% static 'custom/monthly-customer-table.js' %}"></script>
+<script src="{% static 'custom/customer-report.js' %}"></script>
 <script src="{% static 'custom/monthly-form.js' %}"></script>
+<script src="{% static 'custom/new-customer-form.js' %}"></script>
 
 
 <!-- bootsrap-datepicker -->
-<script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js'%}"></script>
+<!-- <script src="{% static 'plugins/bootstrap-datetimepicker/js/bootstrap-datepicker.min.js'%}"></script> -->
 
 <!-- main dashboard script -->
 <script src="{% static 'custom/dashboard.js' %}"></script>
+
+<!-- AdminLTE App -->
+<script src="{% static 'dist/js/adminlte.min.js' %}"></script>
+
+<!-- AdminLTE for demo purposes -->
+<script src="{% static 'dist/js/demo.js' %}"></script>
 <!-- add event script -->
 <!-- <script src="{% static 'custom/add-event.js' %}"></script> -->
-
-<script>
-    $('.select2bs4').select2({
-        theme: 'bootstrap4'
-    });
-</script>
-
 {% endblock%}
 
-{% block style %}
+{% block styles %}
 {{ block.super }}
 <!-- Ionicons -->
-<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<!-- <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
 <!-- bootsrap-datepicker -->
-<link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css' %}">
+<!-- <link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker/css/bootstrap-datepicker3.min.css' %}"> -->
+
+<!-- daterange picker -->
+<link rel="stylesheet" href="{% static 'plugins/daterangepicker/daterangepicker.css' %}">
+<!-- Tempusdominus Bbootstrap 4 -->
+<link rel="stylesheet" href="{% static 'plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css' %}">
+<!-- Theme style -->
+<link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
 {% endblock %}
 {% block body %}
+<style>
+    tr.highlight td.jsgrid-cell {
+        background-color: #e3ec95;
+    }
+</style>
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -133,10 +175,18 @@ OrbitalLTE | Dashboard
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="ml-3 nav-item">
-                                    <a href="#" class="nav-link monthly-form-btn actve">
+                                    <a href="#" class="nav-link monthly-form-btn active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
-                                            Monthly Form
+                                            Subcribtion Form
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="ml-3 nav-item">
+                                    <a href="#" class="nav-link new-customer-form-btn">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            New Customer Form
                                         </p>
                                     </a>
                                 </li>
@@ -196,6 +246,12 @@ OrbitalLTE | Dashboard
                                         <p>Netwatch</p>
                                     </a>
                                 </li>
+                                <li class="ml-3 nav-item">
+                                    <a href="#" class="nav-link monthly-customer-report-btn">
+                                        <i class="fa fa-users nav-icon"></i>
+                                        <p>Customer</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <!-- Customer menu -->
@@ -231,8 +287,8 @@ OrbitalLTE | Dashboard
 
         <!-- content -->
         <div class="content-wrapper" id="content">
-            <!-- monthly customer form -->
-            <div id="monthly-form-content">
+            <!-- subcribe form -->
+            <div id="monthly-form-content" class=''>
                 <section class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
@@ -241,24 +297,24 @@ OrbitalLTE | Dashboard
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item active"><a>Home</a></li>
+                                    <li class="breadcrumb-item"><a>Home</a></li>
+                                    <li class="breadcrumb-item active">Subcribtion Form</li>
                                 </ol>
                             </div>
                         </div>
                     </div><!-- /.container-fluid -->
                 </section>
                 <section class="content-body">
-                    <!-- general form elements -->
                     <div class="container">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="card card-primary">
+                                <div class="card card-success subcribtion-form">
                                     <div class="card-header">
                                         <h3 class="card-title">Monthly Subcribtion Form</h3>
                                     </div>
                                     <!-- /.card-header -->
                                     <!-- form start -->
-                                    <form onsubmit="return false;">
+                                    <form>
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label>Customer</label>
@@ -289,18 +345,26 @@ OrbitalLTE | Dashboard
                                                     placeholder="Jumlah pembelian" required>
                                             </div>
                                             <div class="form-group">
+                                                <label>Total</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Rp</span>
+                                                    <input type="text" class="form-control input-total"
+                                                        placeholder="Kembalian" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <label>Cash</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">Rp</span>
-                                                    <input type="number" class="form-control input-cash"
-                                                        placeholder="Bayar" required />
+                                                    <input type="text" inputmode="numeric"
+                                                        class="form-control input-cash" placeholder="Bayar" required />
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label>Return</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">Rp</span>
-                                                    <input type="number" class="form-control input-return"
+                                                    <input type="text" class="form-control input-return"
                                                         placeholder="Kembalian" readonly>
                                                 </div>
                                             </div>
@@ -308,25 +372,166 @@ OrbitalLTE | Dashboard
                                                 <label>Bill</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text">Rp</span>
-
-                                                    <input type="number" class="form-control input-bill"
-                                                        placeholder="Tagihan">
+                                                    <input type="text" inputmode="numeric"
+                                                        class="form-control input-bill" placeholder="Tagihan" readonly>
                                                 </div>
-
                                             </div>
                                         </div>
-                                        <!-- /.card-body -->
-                                        <div class="card-footer">
-                                            <button type="submit"
-                                                class="btn btn-success submit-btn float-right">Submit</button>
-                                        </div>
                                     </form>
+
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <button class="btn btn-success submit-btn float-right">Submit</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6"></div>
                         </div>
                     </div>
+                    <!-- transaction table -->
+                    <div class="card" id="transaction-table">
+                        <!-- TODO: this -->
+                        <h5 class="card-header">
+                            Transaction Log
+                        </h5>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div id="transaction-table-jsgrid"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- new customer form -->
+            <div id="new-customer-form-content" class='d-none'>
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Home</h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a>Home</a></li>
+                                    <li class="breadcrumb-item active">New Customer Form</li>
 
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <!-- general form elements -->
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card card-warning new-customer-form">
+                                    <div class="card-header">
+                                        <h3 class="card-title">New Customer Form</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <!-- form start -->
+                                    <div class="card-body">
+                                        <form>
+                                            <!-- name -->
+                                            <div class="form-group">
+                                                <label>Name</label>
+                                                <input type="text" class="form-control input-name"
+                                                    placeholder="Nama Customer">
+                                            </div>
+                                            <!-- phone -->
+                                            <div class="form-group">
+                                                <label>Phone</label>
+                                                <input type="text" class="form-control input-phone"
+                                                    placeholder="Nomor HP">
+                                            </div>
+                                            <!-- address -->
+                                            <div class="form-group">
+                                                <label>Address</label>
+                                                <input type="text" class="form-control input-addr"
+                                                    placeholder="Alamat jl/GG">
+                                            </div>
+                                            <!-- RT RW -->
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>RT</label>
+                                                            <input type="number" class="form-control input-rt"
+                                                                placeholder="RT">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <div class="form-group">
+                                                            <label>RW</label>
+                                                            <input type="number" class="form-control input-rw"
+                                                                placeholder="RW">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <!-- area -->
+                                                        <div class="form-group">
+                                                            <label>Area</label>
+                                                            <select class="form-control input-area">
+                                                                <option value=1>MJT</option>
+                                                                <option value=2>NGML</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- ap -->
+                                            <div class="form-group">
+                                                <label>Access Point</label>
+                                                <select class="form-control select2bs4 input-ap" style="width: 100%;">
+                                                    <option selected="selected"></option>
+                                                    <option value="0">MJT012938</option>
+                                                    <option value="1">NGML91823</option>
+                                                </select>
+                                            </div>
+                                            <!-- ap -->
+                                            <div class="form-group">
+                                                <label>Monthly Plan</label>
+                                                <select class="form-control select2bs4 input-monthly-plan"
+                                                    style="width: 100%;">
+                                                    <option selected="selected"></option>
+                                                    <option value="0">ASU</option>
+                                                    <option value="1">Babi</option>
+                                                </select>
+                                            </div>
+                                            <!-- username -->
+                                            <div class="form-group">
+                                                <label>Username</label>
+                                                <input type="text" class="form-control input-username"
+                                                    placeholder="Username Member">
+                                            </div>
+                                            <!-- password -->
+                                            <div class="form-group">
+                                                <label>Password</label>
+                                                <input type="text" class="form-control input-password"
+                                                    placeholder="Password Member">
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <button class="btn btn-success submit-btn float-right">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6"></div>
+                        </div>
+                    </div>
+                    <!-- new customer table -->
+                    <div class="card" id="new-customer-table">
+                        <!-- TODO: this -->
+                        <h5 class="card-header">
+                            New Customer
+                        </h5>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <div id="new-customer-table-jsgrid"></div>
+                        </div>
+                    </div>
                 </section>
             </div>
             <!-- AP table -->
@@ -349,11 +554,6 @@ OrbitalLTE | Dashboard
                 </section>
                 <section class="content-body">
                     <div class="card">
-                        <style>
-                            tr.highlight td.jsgrid-cell {
-                                background-color: #e3ec95;
-                            }
-                        </style>
                         <div class="card-header">
                             <h3 class="card-title">
                                 <!-- <p class="text-center">Access Point</p> -->
@@ -467,7 +667,6 @@ OrbitalLTE | Dashboard
                         </div>
                     </div>
                 </div>
-
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <div class="container-fluid">
@@ -490,15 +689,7 @@ OrbitalLTE | Dashboard
                             <div class="col-md-4">
                                 <!-- inventory-type -->
                                 <div class="card" id="inventory-type-table">
-                                    <style>
-                                        tr.highlight td.jsgrid-cell {
-                                            background-color: #e3ec95;
-                                        }
 
-                                        /* .jsgrid-grid-header {
-                                                                                overflow: auto;
-                                                                            } */
-                                    </style>
                                     <div class="card-header">
                                         <h3 class="card-title">
                                             <p class="text-center" style="font-size: 20px;">Inventory Type</p>
@@ -688,7 +879,7 @@ OrbitalLTE | Dashboard
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item">Home</li>
+                                    <li class="breadcrumb-item">Report</li>
                                     <li class="breadcrumb-item active">Netwatch</li>
                                 </ol>
                             </div>
@@ -699,7 +890,7 @@ OrbitalLTE | Dashboard
                     <div class="container">
                         <div class="row">
                             <div class="col-md-5">
-                                <!-- area -->
+                                <!-- Netwatch -->
                                 <div class="card" id="netwatch-table">
                                     <div class="card-header">
                                         <h3 class="card-title">
@@ -744,6 +935,167 @@ OrbitalLTE | Dashboard
                                 </div>
                             </div>
                             <div class="col-md-7"></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- Customer report -->
+            <div id="monthly-customer-report-content" class="d-none">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Customer Report<h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item">Report</li>
+                                    <li class="breadcrumb-item active">Customer</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="container">
+                        <!-- info box -->
+                        <div class="customer-info">
+                            <div class="row">
+                                <div class="col-12 col-sm-6 col-md-3 total-customer-info">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-info elevation-1"><i
+                                                class="fas fa-users"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Total Customer</span>
+                                            <span class="info-box-number total-customer">
+                                                0
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3 monthly-new-info">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-user"
+                                                style="color:white;"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Customer Baru</span>
+                                            <span class="info-box-number new-customer">
+                                                0
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3 monthly-paid-info">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-success elevation-1"><i
+                                                class="fas fa-thumbs-up"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Lunas</span>
+                                            <span class="info-box-number">
+                                                <span class="paid-customer">0</span> (<span
+                                                    class="paid-customer-percent">0</span><small>%</small>)
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3 this-week-due">
+                                    <div class="info-box">
+                                        <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-calendar"
+                                                style="color:white;"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Tenggat Minggu Ini</span>
+                                            <span class="info-box-number due-customer">
+                                                0
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                    <!-- /.info-box -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- filter -->
+                        <div class="card customer-report-filter">
+                            <h5 class="card-header">
+                                <!-- <strong>Filter</strong> -->
+                                Filter
+                            </h5>
+                            <div class="card-body">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <label for="">Preset</label>
+                                        <div>
+                                            <a class="btn btn-app bg-warning filter-preset-day">
+                                                <i class="fas fa-calendar-day"></i>
+                                                <strong>Hari</strong>
+                                            </a>
+                                            <a class="btn btn-app bg-warning filter-preset-week">
+                                                <i class="fas fa-calendar-week"></i>
+                                                <strong>Minggu</strong>
+                                            </a>
+                                            <a class="btn btn-app bg-warning filter-preset-month">
+                                                <i class="fas fa-calendar"></i>
+                                                <strong>Bulan</strong>
+                                            </a>
+                                            <a class="btn btn-app bg-danger filter-preset-last">
+                                                <i class="fas fa-calendar"></i>
+                                                <strong>Bulan Lalu</strong>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Due Date</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="far fa-calendar-alt"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="text"
+                                                        class="form-control daterange float-right input-due-range">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6"></div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-success btn-submit float-right">OK</button>
+                            </div>
+                        </div>
+                        <!-- jsgrid -->
+                        <div class="card" id="customer-report-table">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    Due Customer
+                                </h3>
+                                <div class="card-tools">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col tool-message-btn d-none">
+                                                <a class="btn btn-block bg-success" data-toggle="tooltip"
+                                                    data-placement="top" title="Message">
+                                                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div id="customer-report-jsgrid"></div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -821,8 +1173,8 @@ OrbitalLTE | Dashboard
                                         <label>Monthly Plan</label>
                                         <select class="form-control select2bs4 input-monthly-plan" style="width: 100%;">
                                             <option selected="selected"></option>
-                                            <option value="0">1BLN3</option>
-                                            <option value="1">1BLN1</option>
+                                            <option value="0">ASU</option>
+                                            <option value="1">Babi</option>
                                         </select>
                                     </div>
                                     <!-- username -->
@@ -849,13 +1201,13 @@ OrbitalLTE | Dashboard
                                             <div class=" form-group">
                                                 <label>Start Date</label>
                                                 <div class="input-group date" data-provider="datepicker">
-                                                    <style>
+                                                    <!-- <style>
                                                         .datepicker,
                                                         .table-condensed {
                                                             width: 300px;
                                                             /* height: 300px; */
                                                         }
-                                                    </style>
+                                                    </style> -->
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text fa fa-calendar"></span>
                                                     </div>
@@ -869,13 +1221,13 @@ OrbitalLTE | Dashboard
                                             <div class=" form-group">
                                                 <label>Due Date</label>
                                                 <div class="input-group date" data-provider="datepicker">
-                                                    <style>
+                                                    <!-- <style>
                                                         .datepicker,
                                                         .table-condensed {
                                                             width: 300px;
                                                             /* height: 300px; */
                                                         }
-                                                    </style>
+                                                    </style> -->
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text fa fa-calendar"></span>
                                                     </div>
@@ -1148,7 +1500,18 @@ OrbitalLTE | Dashboard
                             <input type="text" class="form-control input-wifi" placeholder="Wifi name" value="RT NET">
                         </div>
                         <!-- Date -->
-                        <div class=" form-group">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <div class="input-group date " id="ap-modal-date-input" data-target-input="nearest">
+                                <div class="input-group-append" data-toggle="datetimepicker"
+                                    data-target="#ap-modal-date-input">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
+                                <input type="text" class="form-control datetimepicker-input input-date"
+                                    data-toggle="datetimepicker" data-target="#ap-modal-date-input" />
+                            </div>
+                        </div>
+                        <!-- <div class=" form-group">
                             <label>Date</label>
                             <div class="input-group date" data-provider="datepicker">
                                 <style>
@@ -1164,7 +1527,7 @@ OrbitalLTE | Dashboard
                                 <input type="text" class="form-control datepicker-input input-date"
                                     placeholder="Enter a Date">
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Area -->
                         <div class="form-group">

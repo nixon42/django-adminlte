@@ -21,6 +21,8 @@ var CONTENT_INIT = {
     MONTHLY_CUSTOMER: false,
     MONTHLY_PLAN: false,
     MONTHLY_FORM: false,
+    MONTHLY_CUSTOMER_REPORT: false,
+    NEW_COSTUMER_FORM: false,
     table: {}
 };
 var AREA = [{ pk: 0, name: 'cok', code: 'asu' }];
@@ -28,6 +30,7 @@ var NETWATCH_DATA = [{}];
 var MONTHLY_PLAN_SELECT = [];
 var MONTHLY_PLAN = [];
 var MONTHLY_CUSTOMER = []
+var MONTHLY_CUSTOMER_REPORT = [];
 
 var API_URL = {
     ap: {
@@ -56,7 +59,16 @@ var API_URL = {
     monthly_customer: {
         get: '/customer/getmonthly',
         add: '/customer/addmonthly',
-        form: '/customer/subcribe'
+        form: '/customer/subcribe',
+        newcustomerlog: '/customer/getnewcus'
+    },
+    customer_report: {
+        getInfo: '/customer/getinfo',
+        filter: '/customer/filter',
+    },
+    form: {
+        getTransactionLog: '/customer/getlog',
+        getNewCustomerLog: '/customer/getnewcustomer'
     }
 }
 
@@ -93,9 +105,9 @@ function getarea() {
         async: false,
 
     }).fail(() => {
-        toastr.error(`failed to get data for ${this.name}`);
+        console.log(`failed to get data for ${this.name}`);
     }).done((res) => {
-        toastr.success(`done load data ${this.name}`);
+        console.log(`done load data ${this.name}`);
         let data = JSON.parse(res.data);
         AREA = [];
         AREA.push({ pk: 0, name: '', code: '' });
@@ -120,7 +132,7 @@ function getnetwatch() {
     }).fail(() => {
         toastr.error(`failed to get data for ${this.name}`);
     }).done((res) => {
-        toastr.success(`done load data ${this.name}`);
+        console.log(`done load data ${this.name}`);
         let data = JSON.parse(res.data);
         NETWATCH_DATA = data;
         // console.log(this.data);
@@ -135,9 +147,9 @@ function getplan() {
         async: false,
 
     }).fail(() => {
-        toastr.error(`failed to get data for plan`);
+        toastr.error(`failed to get monthly plan`);
     }).done((res) => {
-        toastr.success(`done load data plan`);
+        console.log(`done load data plan`);
         let data = JSON.parse(res.data);
         MONTHLY_PLAN = data;
         MONTHLY_PLAN_SELECT = [];
@@ -161,10 +173,6 @@ function getap() {
 
     }).done(function (result) {
         let el = $('.input-ap');
-        if (result.return_code != 0) {
-            toastr.error(`${result.return_code} : ${result.msg}`);
-            return;
-        }
         AP_DATA = JSON.parse(result.data);
 
         SELECT_AP_DATA = [''];
@@ -233,7 +241,7 @@ class ModalObjTemplate {
         }).fail(() => {
             toastr.error('failed to insert data')
         }).done((res) => {
-            if (res.return_code != 0) { toastr.error(`failed, ${res.msg}`); return; }
+            if (res.return_code != 0) { toastr.error(`[ERR${res.return_code}] ${res.msg}`); return; }
             toastr.success('Ok')
             this.modal.modal('hide');
             this.loadDataCB();
@@ -266,7 +274,7 @@ class ModalObjTemplate {
             }
             val.val(item.fields[key]);
         });
-        console.log($(this.cloneBtn).log());
+        // console.log($(this.cloneBtn).log());
         this.cloneBtn.removeClass('d-none');
         this.modal.modal();
     }
@@ -319,7 +327,7 @@ class TableObjTemplate {
         }).fail(() => {
             toastr.error(`failed to get data for ${this.name}`);
         }).done((res) => {
-            toastr.success(`done load data ${this.name}`);
+            console.log(`done load data ${this.name}`);
             this.data = JSON.parse(res.data);
             // console.log(this.data);
         }).always(() => {

@@ -72,7 +72,7 @@ class AccessPoint(models.Model):
     outdoor = models.BooleanField()
     # date = models.DateTimeField(auto_now_add=True)
     #_date = models.TextField(max_length=15, blank=True, null=True)
-    date = models.DateField(default=datetime.datetime.now())
+    date = models.DateField(auto_now_add=True)
 
     area = models.ForeignKey(
         Area, default=1, related_name="aparea", on_delete=models.PROTECT)
@@ -180,13 +180,25 @@ class AccessPoint(models.Model):
 
             # get serial
             serial = AccessPoint.objects.filter(
-                rt=rt, rw=rw, area=area).order_by('-id').first()
+                rt=rt, rw=rw, area=area).order_by('-pk').first()
 
             serial = int(serial.code[-2:]) + 1 if serial != None else 0
+            exist = True
+            while exist:
+                code = f"{area.code}{rt:02d}{rw:02d}{serial:02d}"
+                try:
+                    AccessPoint.objects.get(code=code)
+                    # print(f'{code} exist')
+                    serial += 1
+                    # continue
+                except Exception as e:
+                    logging.error(f'got {e} while check {code}')
+                    # print(f'{code} avaible')
+                    exist = False
 
             ap = AccessPoint()
             ap.ip = data.get('ip')
-            ap.code = f"{area.code}{rt:02d}{rw:02d}{serial:02d}"
+            ap.code = code
             ap.area = area
             ap.rt = rt
             ap.rw = rw

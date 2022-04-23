@@ -17,6 +17,7 @@ class MonthlyPlan(models.Model):
 
 
 class MonthlyCustomer(models.Model):
+    _create_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
     code = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=20, default='No Name')
@@ -52,9 +53,27 @@ class MonthlyCustomer(models.Model):
             if total > cash:
                 bill = total - cash
 
-            self.plan = plan
-            self.sdate = datetime.datetime.now()
-            self.ddate = self.sdate + \
+            if plan != self.plan:
+                self.plan = plan
+                serial = MonthlyCustomer.objects.filter(
+                    plan=plan).order_by('-pk').first()
+                serial = int(serial.code[-3:]) + 1 if serial != None else 0
+                exist = True
+                while exist:
+                    code = f'{plan.code}-{serial:03d}'
+                    try:
+                        MonthlyCustomer.objects.get(code=code)
+                        # print(f'{code} exist')
+                        serial += 1
+                        # continue
+                    except Exception as e:
+                        logging.error(f'got {e} while check {code}')
+                        # print(f'{code} avaible')
+                        self.code = code
+                        exist = False
+            # self.plan = plan
+            # self.sdate = datetime.datetime.now()
+            self.ddate = self.ddate + \
                 datetime.timedelta(days=self.plan.duration * amount)
             self.bill = bill
             self.paid = True if self.bill == 0 else False
@@ -66,6 +85,7 @@ class MonthlyCustomer(models.Model):
                 total=total,
                 cash=cash,
                 ret=ret,
+                ddate=self.ddate,
             )
             log.save()
             self.plan.sold += 1
@@ -75,7 +95,6 @@ class MonthlyCustomer(models.Model):
             raise Exception('failed')
 
     def insert(data: dict):
-        # TODO: this
         if (data.get('pk', '')):
             try:
                 monthlyCustomer = MonthlyCustomer.objects.get(
@@ -83,8 +102,66 @@ class MonthlyCustomer(models.Model):
             except Exception as e:
                 logging.error('cant get monthly customer')
                 raise Exception('pk')
+
+            # get plan
+            try:
+                plan = MonthlyPlan.objects.get(
+                    pk=int(data.get('plan', '')))
+            except ValueError:
+                logging.warn(f'invalid plan')
+                raise Exception('plan')
+            except Exception as e:
+                logging.error(f'cant get plan, {e}')
+                raise Exception('plan')
+
+            if plan != monthlyCustomer.plan:
+                monthlyCustomer.plan = plan
+                serial = MonthlyCustomer.objects.filter(
+                    plan=plan).order_by('-pk').first()
+                serial = int(serial.code[-3:]) + 1 if serial != None else 0
+                exist = True
+                while exist:
+                    code = f'{plan.code}-{serial:03d}'
+                    try:
+                        MonthlyCustomer.objects.get(code=code)
+                        # print(f'{code} exist')
+                        serial += 1
+                        # continue
+                    except Exception as e:
+                        logging.error(f'got {e} while check {code}')
+                        # print(f'{code} avaible')
+                        monthlyCustomer.code = code
+                        exist = False
+
         else:
             monthlyCustomer = MonthlyCustomer()
+            # get plan
+            try:
+                plan = MonthlyPlan.objects.get(
+                    pk=int(data.get('plan', '')))
+            except ValueError:
+                logging.warn(f'invalid plan')
+                raise Exception('plan')
+            except Exception as e:
+                logging.error(f'cant get plan, {e}')
+                raise Exception('plan')
+            monthlyCustomer.plan = plan
+            serial = MonthlyCustomer.objects.filter(
+                plan=plan).order_by('-pk').first()
+            serial = int(serial.code[-3:]) + 1 if serial != None else 0
+            exist = True
+            while exist:
+                code = f'{plan.code}-{serial:03d}'
+                try:
+                    MonthlyCustomer.objects.get(code=code)
+                    print(f'{code} exist')
+                    serial += 1
+                    # continue
+                except Exception as e:
+                    logging.error(f'got {e} while check {code}')
+                    print(f'{code} avaible')
+                    monthlyCustomer.code = code
+                    exist = False
 
         monthlyCustomer.name = data.get('name', 'No Name')
         monthlyCustomer.phone = data.get('phone', '')
@@ -96,22 +173,6 @@ class MonthlyCustomer(models.Model):
             monthlyCustomer.rw = int(data.get('rw', 0))
         except Exception as e:
             logging.warn(f'cant parse rt, {e}')
-
-            # get plan
-        try:
-            plan = MonthlyPlan.objects.get(
-                pk=int(data.get('plan', '')))
-        except ValueError:
-            logging.warn(f'invalid plan')
-            raise Exception('plan')
-        except Exception as e:
-            logging.error(f'cant get plan, {e}')
-            raise Exception('plan')
-        monthlyCustomer.plan = plan
-        serial = MonthlyCustomer.objects.filter(
-            plan=plan).order_by('-id').first()
-        serial = int(serial.code[-3:]) + 1 if serial != None else 0
-        monthlyCustomer.code = f'{plan.code}-{serial:03d}'
 
         # get area
         try:
@@ -131,10 +192,13 @@ class MonthlyCustomer(models.Model):
                 monthlyCustomer.sdate = datetime.datetime.strptime(
                     data.get('sdate', ''), '%Y-%m-%d')
             else:
-                raise Exception('sdate')
+                monthlyCustomer.sdate = datetime.datetime.now()
+                # raise Exception('sdate')
         except Exception as e:
             logging.error(f'cant parse sdate, {e}')
-            raise Exception('sdate')
+            monthlyCustomer.sdate = datetime.datetime.now()
+
+            # raise Exception('sdate')
 
         # get ddate
         try:
@@ -142,10 +206,12 @@ class MonthlyCustomer(models.Model):
                 monthlyCustomer.ddate = datetime.datetime.strptime(
                     data.get('ddate', ''), '%Y-%m-%d')
             else:
-                raise Exception('ddate')
+                monthlyCustomer.ddate = monthlyCustomer.sdate
+                # raise Exception('ddate')
         except Exception as e:
             logging.error(f'cant parse ddate, {e}')
-            raise Exception('ddate')
+            monthlyCustomer.ddate = monthlyCustomer.sdate
+            # raise Exception('ddate')
 
         # get bill
         try:
@@ -158,7 +224,7 @@ class MonthlyCustomer(models.Model):
         try:
             monthlyCustomer.save()
             return monthlyCustomer
-        # except I
+        # except
         except Exception as e:
             logging.error(f'cant add monthly customer, {e}')
             raise Exception('failed')
@@ -172,6 +238,7 @@ class MonthlyPlan_BuyLog(models.Model):
     total = models.IntegerField(default=0)
     cash = models.IntegerField(default=0)
     ret = models.IntegerField(default=0)
+    ddate = models.DateField(null=True)
     date = models.DateField(auto_now_add=True)
 
 # Create your models here.

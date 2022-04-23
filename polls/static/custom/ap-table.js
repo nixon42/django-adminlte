@@ -205,10 +205,6 @@ function accessPointTable() {
 
             }).done(function (result) {
                 // console.log('done /getap');
-                if (result.return_code != 0) {
-                    toastr.error(`${result.return_code} : ${result.msg}`);
-                    return;
-                }
                 // console.log(result.data);
                 let _data_ap = JSON.parse(result.data);
                 // console.log(data_ap[0]);

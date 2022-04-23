@@ -77,7 +77,7 @@ function monthlyCustomer() {
             { name: 'fields.password', type: 'text', width: 100, headerTemplate: 'Password' },
             { name: 'fields.voucher', type: 'text', width: 100, headerTemplate: 'Voucher' },
             { name: 'fields.sdate', type: 'text', width: 100, headerTemplate: 'Start Date' },
-            { name: 'fields.ddate', type: 'text', width: 100, headerTemplate: 'Stop Date' },
+            { name: 'fields.ddate', type: 'text', width: 100, headerTemplate: 'Due Date' },
             { name: 'fields.bill', type: 'number', width: 100, headerTemplate: 'Bill' },
             { name: 'fields.paid', type: 'checkbox', width: 80, headerTemplate: 'Paid' },
             { name: 'fields.note', type: 'text', width: 200, headerTemplate: 'Note' },
@@ -121,8 +121,8 @@ function monthlyCustomer() {
     MonthlyCustomer.modalObj.inputDom.amount.change(() => {
         if (selectedPlan === undefined) { toastr.error('Pilih Paket terlebih dahulu! '); return; }
         let ddate = luxon.DateTime.fromFormat(MonthlyCustomer.modalObj.inputDom.sdate.val(), 'yyyy-MM-dd');
-        console.log(ddate);
-        // console.log(selectedPlan.fields.duration);
+        // console.log(ddate);
+        // console.(selectedPlan.fields.duration);
         ddate = ddate.plus({ days: selectedPlan.fields.duration * amountInput.val() });
         ddate = ddate.toJSDate();
         MonthlyCustomer.modalObj.inputDom.ddate.val(`${ddate.getFullYear()}-${("0" + (ddate.getMonth() + 1)).slice(-2)}-${("0" + (cur_date.getDate())).slice(-2)}`);

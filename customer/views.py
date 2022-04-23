@@ -1,11 +1,68 @@
 from django.shortcuts import render
 from django.core import serializers
-from django.http import JsonResponse, HttpRequest
+from django.http import JsonResponse, HttpRequest, Http404
 from .models import MonthlyCustomer, MonthlyPlan, MonthlyPlan_BuyLog
 from django.db import IntegrityError
+from django.db.models import Q
+from .serializers import TransactionLogSerializers, NewCustomerLogSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+import datetime
 
 import logging
 logging = logging.getLogger(__name__)
+
+
+@api_view(['GET'])
+def getNewCustomerLog(req: HttpRequest):
+    log = MonthlyCustomer.objects.order_by('-pk')[:10].select_related()
+    return Response({'return_code': 0, 'msg': 'OK', 'data': NewCustomerLogSerializer(log, many=True).data})
+
+
+@api_view(['GET'])
+def getTransactionLog(req: HttpRequest):
+    log = MonthlyPlan_BuyLog.objects.order_by('-pk')[:10].select_related()
+    return Response({'return_code': 0, 'msg': 'OK', 'data': TransactionLogSerializers(log, many=True).data})
+
+
+def filter(req: HttpRequest):
+    # print(req.POST)
+    if req.POST.__len__() > 1 or req.POST.__len__() < 1:
+        logging.warn(
+            f"Bad request filter from {req.META.get('REMOTE_ADDR')}")
+        return JsonResponse({'return_code': 400, 'msg': 'bad request data'})
+    dueRange = req.POST.get('dueRange', '').split(' - ')
+
+    # print(dueRange)
+    if dueRange.__len__() != 2:
+        return JsonResponse({'return_code': 400, 'msg': 'Bad dueRange!'})
+
+    try:
+        ddate_min = datetime.datetime.strptime(
+            dueRange[0].strip(), '%Y-%m-%d')
+        ddate_max = datetime.datetime.strptime(
+            dueRange[1].strip(), '%Y-%m-%d')
+        if ddate_min > ddate_max:
+            raise ValueError
+    except Exception as e:
+        logging.error(f'[/customer/filter]cant parse due date range, {e}')
+        return JsonResponse({'return_code': 400, 'msg': 'Bad dueRange!'})
+
+    return JsonResponse({'return_code': 0, 'msg': 'OK', 'data': serializers.serialize('json', MonthlyCustomer.objects.filter(
+        ddate__gte=ddate_min, ddate__lte=ddate_max))})
+
+
+def getInfo(req: HttpRequest):
+    # TODO: this
+    date = datetime.datetime.now()
+    _wdate = date - datetime.timedelta(days=date.weekday())
+    data = {
+        'totalCustomer': MonthlyCustomer.objects.all().count(),
+        'newCustomer': MonthlyCustomer.objects.filter(_create_at__month=date.month).count(),
+        'paidCustomer': MonthlyCustomer.objects.filter(ddate__month__gt=date.month).count(),
+        'dueCustomer': MonthlyCustomer.objects.filter(ddate__gte=_wdate, ddate__lte=_wdate + datetime.timedelta(days=6)).count()
+    }
+    return JsonResponse({'return_code': 0, 'data': data})
 
 
 def getMonthlyPlan(req: HttpRequest):
@@ -15,7 +72,6 @@ def getMonthlyPlan(req: HttpRequest):
 
 
 def addMonthlyPlan(req: HttpRequest):
-    # TODO: this
     if req.POST.__len__() < 4 or req.POST.__len__() > 5:
         logging.warn(
             f"Bad request addMonthlyPlan from {req.META.get('REMOTE_ADDR')}")
@@ -66,7 +122,7 @@ def getMonthlyCustomer(req: HttpRequest):
 
 
 def subcribe(req: HttpRequest):
-    print(req.POST)
+    # print(req.POST)
     if req.POST.__len__() != 6:
         logging.warn(
             f"Bad request subcribe from {req.META.get('REMOTE_ADDR')}")
@@ -114,22 +170,21 @@ def subcribe(req: HttpRequest):
 
 
 def addMonthlyCustomer(req: HttpRequest):
-    # TODO: add form to this
     # print(req.POST)
     if req.POST.__len__() > 15 or req.POST.__len__() < 14:
         logging.warn(
             f"Bad request addMonthlyCustomer from {req.META.get('REMOTE_ADDR')}")
         return JsonResponse({'return_code': 400, 'msg': 'bad Request data'})
     try:
+        customer = MonthlyCustomer.insert(req.POST)
         try:
             amount = int(req.POST.get('amount'))
+            customer.subcribe(customer.plan, amount,
+                              customer.plan.price * amount)
         except Exception as e:
             logging.error('cant get amount!')
-            if req.POST.get('pk', True):
-                return JsonResponse({'return_code': 400, 'msg': 'invalid amount!'})
-
-        customer = MonthlyCustomer.insert(req.POST)
-        customer.subcribe(customer.plan, amount,  customer.plan.price * amount)
+            # if req.POST.get('pk', True):
+            #     return JsonResponse({'return_code': 400, 'msg': 'invalid amount!'})
         return JsonResponse({'return_code': 0, 'msg': 'ok'})
 
     except Exception as e:
