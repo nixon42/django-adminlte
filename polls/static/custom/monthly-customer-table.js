@@ -127,5 +127,4 @@ function monthlyCustomer() {
         ddate = ddate.toJSDate();
         MonthlyCustomer.modalObj.inputDom.ddate.val(`${ddate.getFullYear()}-${("0" + (ddate.getMonth() + 1)).slice(-2)}-${("0" + (cur_date.getDate())).slice(-2)}`);
     });
-    CONTENT_INIT.table.area = MonthlyCustomer;
 }

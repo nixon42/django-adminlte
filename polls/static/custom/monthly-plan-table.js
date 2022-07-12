@@ -77,5 +77,4 @@ function MonthlyPlan() {
         },
     };
     MonthlyPlan.init();
-    CONTENT_INIT.table.area = MonthlyPlan;
 }

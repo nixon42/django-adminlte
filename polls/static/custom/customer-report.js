@@ -41,8 +41,6 @@ function CustomerReport() {
         infoBoxDom.paidCustomerPercent.text(parseInt(data.data.paidCustomer / data.data.totalCustomer * 100));
     });
 
-    // TODO : add dude customer table
-    // let tableDom = table.find('#customer-report-jsgrid');
     let selectedDom = null;
     let selectedItem = null;
     let dueCustomer = [];
@@ -51,7 +49,6 @@ function CustomerReport() {
             toastr.error('invlid phone number');
             return
         }
-        // console.log(`http://wa.me/${selectedItem.fields.phone}`);
         window.open(`http://wa.me/${selectedItem.fields.phone}`, '_blank').focus();
     });
     let getDueCustomer = () => {
@@ -59,11 +56,7 @@ function CustomerReport() {
         $.each(filterDom, (key, val) => {
             filter_data[key] = val.val();
         });
-        // console.log(filter_data);
-        // if (filter_data == '' || filter_data == null) {
-        //     toastr.error('Invalid Due Range !');
-        //     return
-        // }
+        
         $.ajax({
             method: 'POST',
             url: API_URL.customer_report.filter,

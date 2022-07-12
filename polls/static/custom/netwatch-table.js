@@ -56,5 +56,4 @@ function netwatchContent() {
         },
     };
     Netwatch.init();
-    CONTENT_INIT.table.netwatch = Netwatch;
 }

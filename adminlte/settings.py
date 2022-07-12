@@ -47,10 +47,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'django_admin_shell',
+    'rest_framework',
+    'django_browser_reload',
+    # here
     'polls.apps.PollsConfig',
     'customer.apps.CustomerConfig',
-    'django_admin_shell',
-    'rest_framework'
+    'team.apps.TeamConfig',
+    'outlet',
+    'inventory',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +66,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware'
 ]
 
 ROOT_URLCONF = 'adminlte.urls'
@@ -131,6 +137,13 @@ USE_TZ = False
 # csrf
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SECURE = False
+
+# default url
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
+
+# livereload
+# LIVERELOAD_HOST = '192.168.0.4'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/

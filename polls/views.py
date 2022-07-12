@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User, Group
+from django.contrib.auth import authenticate, login
 from django.core import serializers
+from django.contrib.auth.decorators import login_required
 from .models import AccessPoint, AccessPoint_Report, AccessPoint_EditLog, AccessPoint_UpDownLog, AccessPoint_UpLog, Action_Log, Area, Inventory, InventoryType
 from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest, JsonResponse, HttpResponseBadRequest
@@ -7,12 +9,11 @@ from django.conf import global_settings
 import logging
 logging = logging.getLogger(__name__)
 
+# def index(request: HttpRequest):
+#     return render(request, 'polls/starter.html')
 
-def index(request: HttpRequest):
-    return render(request, 'polls/starter.html')
 
-
-def login(request: HttpRequest):
+def loginPage(request: HttpRequest):
     return render(request, 'polls/login.html')
 
 
@@ -20,6 +21,7 @@ def register(request: HttpRequest):
     return render(request, 'polls/register.html')
 
 
+@login_required
 def dashboard(request: HttpRequest):
     return render(request, 'polls/dashboard.html')
 

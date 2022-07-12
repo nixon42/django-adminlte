@@ -2,6 +2,9 @@ var cur_date = new Date();
 let dt = luxon.DateTime.local();
 var $DOM = $(document);
 var AP_DATA = [];
+var LOCAL_STORAGE_KEY = {
+    MENU: 'rtnet-team-menu',
+};
 var SELECT_AP_DATA = [
     '',
     'MJTASU'
@@ -20,10 +23,31 @@ var CONTENT_INIT = {
     NETWATCH_INIT: false,
     MONTHLY_CUSTOMER: false,
     MONTHLY_PLAN: false,
-    MONTHLY_FORM: false,
+    SUBCRIBE_FORM: false,
     MONTHLY_CUSTOMER_REPORT: false,
     NEW_COSTUMER_FORM: false,
-    table: {}
+    TEAM_TABLE_INIT: false,
+    ROLE_TABLE_INIT: false,
+    OUTLET_TABLE_INIT: false,
+    OUTLET_INCOME_INIT: false,
+    INVEN_IN_INIT: false,
+    table: {},
+    key_string: {
+        AP: 'ap',
+        INVEN: 'inven',
+        AREA: 'area',
+        NETWATCH: 'netwatch',
+        MONTHLY_CUSTOMER: 'monthly-customer',
+        MONTHLY_PLAN: 'monthly-plan',
+        SUBCRIBE_FORM: 'subcribe-form',
+        MONTHLY_CUSTOMER_REPORT: 'monthly-customer-report',
+        NEW_COSTUMER_FORM: 'new-customer-form',
+        TEAM_TABLE: 'team',
+        ROLE_TABLE: 'role',
+        OUTLET_TABLE: 'outlet',
+        OUTLET_INCOME: 'outlet-income',
+        INVEN_IN: 'inven-in'
+    }
 };
 var AREA = [{ pk: 0, name: 'cok', code: 'asu' }];
 var NETWATCH_DATA = [{}];
@@ -31,8 +55,31 @@ var MONTHLY_PLAN_SELECT = [];
 var MONTHLY_PLAN = [];
 var MONTHLY_CUSTOMER = []
 var MONTHLY_CUSTOMER_REPORT = [];
+var PROFILE = null;
+var TEAM = [];
+var ROLE = [{ id: 1, name: 'asu' }];
+var OUTLET = [];
+var PERMISSION = [];
 
 var API_URL = {
+    outlet: {
+        getoutlet: '/outlet/getoutlet',
+        addoutlet: '/outlet/addoutlet',
+        getdeposit: '/outlet/getdeposit',
+        adddeposit: '/outlet/adddeposit',
+        validate: '/outlet/validate',
+    },
+    team: {
+        loginPage: '/login',
+        login: '/team/login',
+        logout: '/team/logout',
+        getUser: '/team/getuser',
+        addUser: '/team/adduser',
+        getRole: '/team/getrole',
+        addRole: '/team/addrole',
+        getperm: '/team/getperm',
+        profile: '/team/profile'
+    },
     ap: {
         get: '/getap',
         add: '/addap'
@@ -46,7 +93,11 @@ var API_URL = {
     },
     inven: {
         get: '/getinven',
-        add: '/addinven'
+        add: '/addinven',
+        addinvenin: '/inventory/addinvenin',
+        getinvenin: '/inventory/getinvenin',
+        addinvenout: '/inventory/addinvenout',
+        getinvenout: '/inventory/getinvenout',
     },
     area: {
         get: '/getarea',
@@ -72,6 +123,77 @@ var API_URL = {
     }
 }
 
+function getprofile() {
+    $.ajax({
+        url: API_URL.team.profile,
+        method: 'GET',
+        dataType: 'json',
+        async: false,
+    }).fail(() => {
+        toastr.error('failed to get permission, network error!');
+    }).done((res) => {
+        // console.log(res);
+        PROFILE = res.data;
+    });
+}
+
+function getprem() {
+    $.ajax({
+        url: API_URL.team.getperm,
+        method: 'GET',
+        dataType: 'json',
+        async: false,
+    }).fail(() => {
+        toastr.error('failed to get permission, network error!');
+    }).done((res) => {
+        // console.log(res);
+        PERMISSION = res.data;
+    });
+}
+
+function getoutlet() {
+    $.ajax({
+        url: API_URL.outlet.getoutlet,
+        method: 'GET',
+        dataType: 'json',
+        async: false,
+    }).fail(() => {
+        toastr.error('failed to get outlet');
+    }).done((res) => {
+        if (res.return_code != 0) {
+            toastr.error(`[${res.return_code}] ${res.msg}`);
+            return;
+        }
+        OUTLET = res.data;
+        OUTLET.unshift({ pk: 0, name: "" });
+        $('select.input-outlet-select').empty();
+        $.each(OUTLET, (k, v) => {
+            $('select.input-outlet-select').append(`<option value=${v.id}>${v.name}</option>`);
+        });
+    });
+}
+
+function getrole() {
+    $.ajax({
+        url: API_URL.team.getRole,
+        method: 'GET',
+        dataType: 'json',
+        async: false
+    }).fail(() => {
+        toastr.error(`failed to get role`);
+    }).done((res) => {
+        if (res.return_code != 0) {
+            toastr.error(`[${res.return_code}] ${res.msg}`);
+            return;
+        }
+        ROLE = res.data;
+        ROLE.unshift({ id: 0, name: '' })
+        $('.input-role-select').empty();
+        $.each(res.data, (i, v) => {
+            $('.input-role-select').append(`<option value=${v.id}>${v.name}</option>`);
+        });
+    });
+}
 function getcustomer() {
     $.ajax({
         url: API_URL.monthly_customer.get,
@@ -81,7 +203,7 @@ function getcustomer() {
     }).fail(() => {
         toastr.error(`failed to get customer data`);
     }).done((res) => {
-        toastr.success(`done load customer data `);
+        // toastr.success(`done load customer data `);
         // console.log();
         let data = JSON.parse(res.data);
         MONTHLY_CUSTOMER = data;
@@ -200,6 +322,7 @@ class ModalObjTemplate {
         this.inputDom = {};
         this.loadDataCB = null;
         this.cloneBtn = null;
+
     }
     set_prop(key, val) {
         this[key] = val;
@@ -304,12 +427,19 @@ class TableObjTemplate {
         this.insertUrl;
         this.modalObj;
         this.modalSel;
+        this.parseData = true;
         this.useEditModal = true;
         this.selected = null;
         this.selectedItem = null;
         this.globalVarUpdateCB = (item) => { };
         this.showMore = (arg) => { };
+        this.dataPreProcess = (data) => { return data };
         this.editBtn = null;
+        this.reinitJsGrid = () => {
+            // console.log();
+            $(this.jsgrid).jsGrid(this.jsgridConfig);
+            $(this.jsgrid).jsGrid('loadData');
+        };
     }
     refreshData() {
         console.log(`[${this.name}] refresh data`);
@@ -328,9 +458,15 @@ class TableObjTemplate {
             toastr.error(`failed to get data for ${this.name}`);
         }).done((res) => {
             console.log(`done load data ${this.name}`);
-            this.data = JSON.parse(res.data);
+            if (this.parseData) {
+                this.data = JSON.parse(res.data);
+            }
+            else {
+                this.data = res.data;
+            }
             // console.log(this.data);
         }).always(() => {
+            this.data = this.dataPreProcess(this.data);
             $(this.jsgrid).jsGrid('loadData');
             this.globalVarUpdateCB(this.data);
         });
@@ -376,7 +512,7 @@ class TableObjTemplate {
         // console.log(this.jsgridConfig);
         $(this.jsgrid).jsGrid(this.jsgridConfig);
         this.refreshData();
-        $(this.jsgrid).jsGrid('loadData');
+        // $(this.jsgrid).jsGrid('loadData');
         this.refreshBtn = $(this._content).find('.tool-btn-refresh');
 
         // console.log(this.refreshBtn);

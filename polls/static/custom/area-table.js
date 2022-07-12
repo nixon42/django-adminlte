@@ -68,5 +68,4 @@ function areaContent() {
         },
     };
     Area.init();
-    CONTENT_INIT.table.area = Area;
 }

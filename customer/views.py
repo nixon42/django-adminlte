@@ -53,7 +53,6 @@ def filter(req: HttpRequest):
 
 
 def getInfo(req: HttpRequest):
-    # TODO: this
     date = datetime.datetime.now()
     _wdate = date - datetime.timedelta(days=date.weekday())
     data = {

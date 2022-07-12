@@ -109,7 +109,7 @@ function monthlyForm() {
         });
     });
 
-    // transacion table
+    // transacion log
     var transactionLog = [];
 
     table.jsGrid({
@@ -144,9 +144,9 @@ function monthlyForm() {
                     console.log('done get transaction log');
                     if (res.return_code != 0) {
                         toastr.error(`[${res.return_code}] ${res.msg}`);
-                        return
+                        return []
                     }
-                    // console.log(res);
+                    // console.log({ data: [{ d: 1 }] });
                     transactionLog = res.data;
                 });
                 // console.log(transactionLog);

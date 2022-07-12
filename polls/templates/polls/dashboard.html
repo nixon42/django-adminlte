@@ -9,17 +9,16 @@ OrbitalLTE | Dashboard
 {{ block.super }}
 <!-- InputMask -->
 <script src="{% static 'plugins/moment/moment.min.js' %}"></script>
-<script src="{% static 'plugins/inputmask/min/jquery.inputmask.bundle.min.js' %}"></script>
-
+<script src="{% static 'plugins/inputmask/jquery.inputmask.min.js' %}"></script>
+<script src="{% static 'plugins/inputmask/min/inputmask/bindings/inputmask.binding.min.js' %}"></script>
 <!-- date-range-picker -->
 <script src="{% static 'plugins/daterangepicker/daterangepicker.js' %}"></script>
-
 <!-- <script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script> -->
 <!-- luxon -->
 <script src="{% static 'plugins/luxon/luxon.min.js' %}"></script>
-
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{% static 'plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
 
 <script>
     let format = "YYYY-MM-DD";
@@ -30,7 +29,7 @@ OrbitalLTE | Dashboard
     $('.date').datetimepicker({
         format: format,
     });
-    $('.daterange')
+    // $('.daterange')
     $('.daterange').daterangepicker({
         locale: {
             format: format,
@@ -55,6 +54,11 @@ OrbitalLTE | Dashboard
 <script src="{% static 'custom/customer-report.js' %}"></script>
 <script src="{% static 'custom/monthly-form.js' %}"></script>
 <script src="{% static 'custom/new-customer-form.js' %}"></script>
+<script src="{% static 'custom/team-table.js' %}"></script>
+<script src="{% static 'custom/outlet-table.js'%}"></script>
+<script src="{% static 'custom/outlet-income.js'%}"></script>
+<script src="{% static 'custom/inven-in-table.js'%}"></script>
+
 
 
 <!-- bootsrap-datepicker -->
@@ -135,7 +139,7 @@ OrbitalLTE | Dashboard
                             alt="User Image">
                     </div>
                     <div class="info">
-                        <a href="#" class="d-block">Admin</a>
+                        <a href="#" class="d-block profile-name">Guest</a>
                     </div>
                 </div>
 
@@ -146,7 +150,6 @@ OrbitalLTE | Dashboard
                         <!-- Add icons to the links using the .nav-icon class
                        with font-awesome or any other icon font library -->
                         <!-- Dashboard -->
-                        <!-- TODO: Add Kasir -->
                         <li class="nav-item has-treeview d-none">
                             <a href="#" class="nav-link disabled">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -166,7 +169,7 @@ OrbitalLTE | Dashboard
                         </li>
                         <!-- Chasier -->
                         <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link home-menu active">
+                            <a href="#" class="nav-link home-menu">
                                 <i class="fa fa-home nav-icon"></i>
                                 <p>
                                     Home
@@ -175,7 +178,7 @@ OrbitalLTE | Dashboard
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="ml-3 nav-item">
-                                    <a href="#" class="nav-link monthly-form-btn active">
+                                    <a href="#" class="nav-link monthly-form-btn">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>
                                             Subcribtion Form
@@ -230,6 +233,30 @@ OrbitalLTE | Dashboard
                                 </li>
                             </ul>
                         </li>
+                        <li class="nav-item hastree">
+                            <a href="" class="nav-link inven-menu">
+                                <i class="nav-icon fas fa-cube"></i>
+                                <p>
+                                    Inventory
+                                    <i class="fas fa-angle-left right"></i>
+
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="ml-3 nav-item">
+                                    <a href="#" class="nav-link inven-in-btn">
+                                        <i class="fas fa-shopping-cart nav-icon"></i>
+                                        <p>Inven IN</p>
+                                    </a>
+                                </li>
+                                <li class="ml-3 nav-item">
+                                    <a href="#" class="nav-link inven-out-btn">
+                                        <i class="fas fa-sign-out-alt nav-icon"></i>
+                                        <p>Inven OUT</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         <!-- Report menu -->
                         <li class="nav-item has-treeview">
                             <a class="nav-link report-menu">
@@ -246,12 +273,7 @@ OrbitalLTE | Dashboard
                                         <p>Netwatch</p>
                                     </a>
                                 </li>
-                                <li class="ml-3 nav-item">
-                                    <a href="#" class="nav-link monthly-customer-report-btn">
-                                        <i class="fa fa-users nav-icon"></i>
-                                        <p>Customer</p>
-                                    </a>
-                                </li>
+
                             </ul>
                         </li>
                         <!-- Customer menu -->
@@ -265,18 +287,85 @@ OrbitalLTE | Dashboard
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="ml-3 nav-item">
-                                    <a href="#" class="nav-link monthly-customer-btn">
+                                    <a class="nav-link monthly-customer-btn">
                                         <i class="fa fa-table nav-icon"></i>
                                         <p>Monthly Customer</p>
                                     </a>
                                 </li>
                                 <li class="ml-3 nav-item">
-                                    <a href="#" class="nav-link monthly-plan-btn">
+                                    <a class="nav-link monthly-plan-btn">
                                         <i class="fa fa-table nav-icon"></i>
                                         <p>Monthly Plan</p>
                                     </a>
                                 </li>
+                                <li class="ml-3 nav-item">
+                                    <a href="#" class="nav-link monthly-customer-report-btn">
+                                        <i class="fa fa-file nav-icon"></i>
+                                        <p>Customer Report</p>
+                                    </a>
+                                </li>
                             </ul>
+                        </li>
+                        <!-- team menu -->
+                        <li class="nav-item has-treeview">
+                            <a class="nav-link team-menu">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>
+                                    Team
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="ml-3 nav-item">
+                                    <a class="nav-link team-table-btn">
+                                        <i class="fa fa-users nav-icon"></i>
+                                        <p>All Teams</p>
+                                    </a>
+                                </li>
+                                <li class="ml-3 nav-item">
+                                    <a class="nav-link role-table-btn">
+                                        <i class="fa fa-table nav-icon"></i>
+                                        <p>Role</p>
+                                    </a>
+                                </li>
+                                <li class="ml-3 nav-item">
+                                    <a class="nav-link permission-table-btn">
+                                        <i class="fa fa-key nav-icon"></i>
+                                        <p>Permission</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- outlet menu -->
+                        <li class="nav-item has-treeview">
+                            <a class="nav-link outlet-menu">
+                                <i class="nav-icon fas fa-store"></i>
+                                <p>
+                                    Outlet
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="ml-3 nav-item">
+                                    <a class="nav-link outlet-table-btn">
+                                        <i class="fa fa-table nav-icon"></i>
+                                        <p>Outlet Table</p>
+                                    </a>
+                                </li>
+                                <li class="ml-3 nav-item">
+                                    <a class="nav-link outlet-income-btn">
+                                        <i class="fa fa-money-bill nav-icon"></i>
+                                        <p>Outlet Income</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- logout -->
+                        <li class="nav-item logout-menu mt-5">
+                            <a class="nav-link text-danger">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>Log out</p>
+                            </a>
                         </li>
                     </ul>
                 </nav>
@@ -287,8 +376,617 @@ OrbitalLTE | Dashboard
 
         <!-- content -->
         <div class="content-wrapper" id="content">
+            <!-- inventory in content -->
+            <div id="inven-in-content" class="d-none">
+                <!-- TODO:this -->
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Inventory IN<h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item">Inventory</li>
+                                    <li class="breadcrumb-item active">inven in</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="container">
+                        <!-- inven in form -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card card-success inven-in-form">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Inventory IN</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <!-- form start -->
+                                    <div class="card-body">
+                                        <form>
+                                            <!-- inven type -->
+                                            <div class="form-group">
+                                                <label for="">Item</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text fa fa-list-alt"></span>
+                                                    <select aria-placeholder="Outlet" }
+                                                        class="form-control select2bs4 input-inven-item-select"
+                                                        required>
+                                                        <option value=""></option>
+                                                        <option value="1">Supri</option>
+                                                        <option value="2">Kontol</option>
+                                                        <option value="3">Sumpah</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!-- amount -->
+                                            <div class="form-group">
+                                                <label>Amount</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">@</span>
+                                                    <input type="number" class="form-control input-amount"
+                                                        placeholder="Jumlah pembelian">
+                                                </div>
+                                            </div>
+                                            <!-- price 1 -->
+                                            <div class="form-group">
+                                                <label>Price @1</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Rp.</span>
+                                                    <input
+                                                        data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'rightAlign': false"
+                                                        type="text" class="form-control input-price-1"
+                                                        placeholder="harga satuan" inputmode="numeric">
+                                                </div>
+                                            </div>
+                                            <!-- price 2 -->
+                                            <div class="form-group">
+                                                <label>Price Total</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">Rp.</span>
+                                                    <input
+                                                        data-inputmask="'alias': 'decimal', 'groupSeparator': ',', 'rightAlign': false"
+                                                        type="text" class="form-control input-price-total"
+                                                        placeholder="harga total" inputmode="numeric">
+                                                </div>
+                                            </div>
+                                            <!-- Note -->
+                                            <div class="form-group">
+                                                <label>Note</label>
+                                                <textarea class="form-control input-note" rows="3"
+                                                    placeholder="Catatan"></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- /.card-body -->
+                                    <div class="card-footer">
+                                        <button class="btn btn-success submit-btn float-right">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- filter -->
+                        <div class="card inven-in-filter">
+                            <h5 class="card-header">
+                                Filter
+                            </h5>
+                            <div class="card-body">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <label for="">Preset</label>
+                                        <div>
+                                            <a class="btn btn-app bg-warning filter-preset-week">
+                                                <i class="fas fa-calendar-week"></i>
+                                                <strong>Minggu</strong>
+                                            </a>
+                                            <a class="btn btn-app bg-warning filter-preset-month">
+                                                <i class="fas fa-calendar"></i>
+                                                <strong>Bulan</strong>
+                                            </a>
+                                            <a class="btn btn-app bg-danger filter-preset-last">
+                                                <i class="fas fa-calendar"></i>
+                                                <strong>Bulan Lalu</strong>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">In Date</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="far fa-calendar-alt"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="text"
+                                                        class="form-control daterange float-right input-due-range">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6"></div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-success btn-submit float-right">OK</button>
+                            </div>
+                        </div>
+                        <!-- inven-in table -->
+                        <div class="card" id="inven-in-table">
+                            <div class="card-header">
+                                <h2 class="card-title py-2">
+                                    Inventory IN
+                                </h2>
+                                <div class="card-tools">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                    data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                    <i class="fa fa-sync"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col tool-btn-validate d-none">
+                                                <a class="btn btn-block bg-success" data-toggle="tooltip"
+                                                    data-placement="top" title="Validate">
+                                                    <i class=" fas fa-check text-white"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div id="inven-in-table-jsgrid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- ./inventory in -->
+            </div>
+            <!-- outlet deposit -->
+            <div id="outlet-income-content" class="d-none">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Outlet Deposit<h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item">Outlet</li>
+                                    <li class="breadcrumb-item active">Outlet Deposit</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="container">
+                        <!-- outlet income form -->
+                        <div class="row">
+                            <!-- general form elements -->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card card-primary outlet-income-form">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Outlet Deposit</h3>
+                                            </div>
+                                            <!-- /.card-header -->
+                                            <!-- form start -->
+                                            <div class="card-body">
+                                                <!-- outlet deposit form -->
+                                                <form>
+                                                    <!-- outlet -->
+                                                    <div class="form-group">
+                                                        <label for="">Outlet</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text fa fa-store-alt"></span>
+                                                            <select aria-placeholder="Outlet" }
+                                                                class="form-control select2bs4 input-outlet-select"
+                                                                required>
+                                                                <option value=""></option>
+                                                                <option value="1">Supri</option>
+                                                                <option value="2">Kontol</option>
+                                                                <option value="3">Sumpah</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <!-- income -->
+                                                    <div class="form-group">
+                                                        <label>Deposit</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Rp</span>
+                                                            <input type="number" class="form-control input-deposit"
+                                                                placeholder="Total Setoran">
+                                                        </div>
+                                                    </div>
+                                                    <!-- Note -->
+                                                    <div class="form-group">
+                                                        <label>Note</label>
+                                                        <textarea class="form-control input-note" rows="3"
+                                                            placeholder="Enter Note Here"></textarea>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- /.card-body -->
+                                            <div class="card-footer">
+                                                <button class="btn btn-success submit-btn float-right">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Outlet table -->
+                        <div class="card" id="outlet-income-table">
+                            <div class="card-header">
+                                <h2 class="card-title py-2">
+                                    Outlet Deposit
+                                </h2>
+                                <div class="card-tools">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                    data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                    <i class="fa fa-sync"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col tool-btn-validate d-none">
+                                                <a class="btn btn-block bg-success" data-toggle="tooltip"
+                                                    data-placement="top" title="Validate">
+                                                    <i class=" fas fa-check text-white"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div id="outlet-income-table-jsgrid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- outlet table -->
+            <div id="outlet-table-content" class="d-none">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>Outlet Table<h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item">Outlet</li>
+                                    <li class="breadcrumb-item active">Outlet Table</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="container">
+                        <div class="row">
+                            <!-- general form elements -->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card card-success outlet-form">
+                                            <div class="card-header">
+                                                <h3 class="card-title">outlet Form</h3>
+                                            </div>
+                                            <!-- /.card-header -->
+                                            <!-- form start -->
+                                            <div class="card-body">
+                                                <!-- outlet form -->
+                                                <form>
+                                                    <!-- name -->
+                                                    <div class="form-group">
+                                                        <label>Name</label>
+                                                        <input type="text" class="form-control input-name"
+                                                            placeholder="Nama Outlet">
+                                                    </div>
+                                                    <!-- phone -->
+                                                    <div class="form-group">
+                                                        <label>Phone</label>
+                                                        <input type="text" class="form-control input-phone"
+                                                            placeholder="Nomor HP">
+                                                    </div>
+                                                    <!-- address -->
+                                                    <div class="form-group">
+                                                        <label>Address</label>
+                                                        <input type="text" class="form-control input-addr"
+                                                            placeholder="Alamat jl/GG">
+                                                    </div>
+                                                    <!-- RT RW -->
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-3">
+                                                                <div class="form-group">
+                                                                    <label>RT</label>
+                                                                    <input type="number" class="form-control input-rt"
+                                                                        placeholder="RT">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-3">
+                                                                <div class="form-group">
+                                                                    <label>RW</label>
+                                                                    <input type="number" class="form-control input-rw"
+                                                                        placeholder="RW">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <!-- area -->
+                                                                <div class="form-group">
+                                                                    <label>Area</label>
+                                                                    <select class="form-control input-area">
+                                                                        <option value=1>MJT</option>
+                                                                        <option value=2>NGML</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Last Deposit -->
+                                                    <div class=" form-group">
+                                                        <label>Last deposit</label>
+                                                        <div class="input-group date last-deposit"
+                                                            data-target-input="nearest">
+                                                            <div class="input-group-append" data-toggle="datetimepicker"
+                                                                data-target=".last-deposit">
+                                                                <div class="input-group-text"><i
+                                                                        class="fa fa-calendar"></i>
+                                                                </div>
+                                                            </div>
+                                                            <input type="text"
+                                                                class="form-control datetimepicker-input input-last-deposit"
+                                                                data-toggle="datetimepicker"
+                                                                data-target=".last-deposit" />
+                                                        </div>
+                                                    </div>
+                                                    <!-- income -->
+                                                    <div class="form-group">
+                                                        <label>Total Income</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Rp</span>
+                                                            <input type="number" class="form-control input-income"
+                                                                placeholder="Total Setoran">
+                                                        </div>
+                                                    </div>
+                                                    <!-- Note -->
+                                                    <div class="form-group">
+                                                        <label>Note</label>
+                                                        <textarea class="form-control input-note" rows="3"
+                                                            placeholder="Enter Note Here"></textarea>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- /.card-body -->
+                                            <div class="card-footer">
+                                                <button
+                                                    class="btn btn-success submit-btn float-right mx-1">Submit</button>
+                                                <button class="btn btn-primary reset-btn float-right">Reset<button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Outlet table -->
+                        <div class="card" id="outlet-table">
+                            <div class="card-header">
+                                <h2 class="card-title py-2">
+                                    Outlet
+                                </h2>
+                                <div class="card-tools">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                    data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                    <i class="fa fa-sync"></i>
+                                                </a>
+                                            </div>
+                                            <div class="col tool-btn-edit d-none">
+                                                <a class="btn btn-block bg-warning " data-toggle="tooltip"
+                                                    data-placement="top" title="Edit">
+                                                    <i class=" fas fa-edit text-white"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div id="outlet-table-jsgrid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- team table -->
+            <div id="team-table-content" class="d-none">
+
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>All Teams<h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item">Team</li>
+                                    <li class="breadcrumb-item active">All Team</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+                <section class="content-body">
+                    <div class="container">
+                        <div class="row">
+                            <!-- general form elements -->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card card-warning register-form">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Register Form</h3>
+                                            </div>
+                                            <!-- /.card-header -->
+                                            <!-- form start -->
+                                            <div class="card-body">
+                                                <form>
+                                                    <!-- first name -->
+                                                    <div class="form-group">
+                                                        <label>First Name</label>
+                                                        <input type="text" class="form-control input-first-name"
+                                                            placeholder="Nama Depan">
+                                                    </div>
+                                                    <!-- last name -->
+                                                    <div class="form-group">
+                                                        <label>Last Name</label>
+                                                        <input type="text" class="form-control input-last-name"
+                                                            placeholder="Nama Belakang">
+                                                    </div>
+                                                    <!-- last name -->
+                                                    <div class="form-group">
+                                                        <label>Username</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text fa fa-user"></span>
+                                                            <input type="text" class="form-control input-username"
+                                                                placeholder="Username">
+                                                        </div>
+                                                    </div>
+                                                    <!-- role -->
+                                                    <div class="form-group">
+                                                        <label for="">Role</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text fa fa-users"></span>
+                                                            <select aria-placeholder="Role" }
+                                                                class="form-control select2bs4 input-role-select"
+                                                                required>
+                                                                <option value=""></option>
+                                                                <option value="1">Supri</option>
+                                                                <option value="2">Kontol</option>
+                                                                <option value="3">Sumpah</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <!-- password -->
+                                                    <div class="form-group">
+                                                        <label>Password</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text fa fa-key">
+                                                            </span>
+                                                            <input type="password" class="form-control input-password"
+                                                                placeholder="Password">
+                                                        </div>
+                                                    </div>
+                                                    <!-- confirm password -->
+                                                    <div class="form-group">
+                                                        <label>Confirm Password</label>
+                                                        <input type="password"
+                                                            class="form-control input-confirm-password"
+                                                            placeholder="Confirm Password">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- /.card-body -->
+                                            <div class="card-footer">
+                                                <button class="btn btn-success submit-btn float-right">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!-- All user table -->
+                                <div class="card" id="team-table">
+                                    <div class="card-header">
+                                        <h2 class="card-title py-2">
+                                            All User
+                                        </h2>
+                                        <div class="card-tools">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                            data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                            <i class="fa fa-sync"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div id="team-table-jsgrid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <!-- Role table -->
+                                <div class="card" id="role-table">
+                                    <div class="card-header">
+                                        <h2 class="card-title py-2">
+                                            Role
+                                        </h2>
+                                        <div class="card-tools">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <a class="btn btn-block bg-primary tool-btn-refresh"
+                                                            data-toggle="tooltip" data-placement="top" title="Refresh">
+                                                            <i class="fa fa-sync"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col d-none">
+                                                        <a class="btn btn-block bg-success tool-btn-add"
+                                                            data-toggle="tooltip" data-placement="top" title="Add">
+                                                            <i class=" fas fa-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col  tool-btn-edit d-none">
+                                                        <a class="btn btn-block bg-warning" data-toggle="tooltip"
+                                                            data-placement="top" title="Edit">
+                                                            <i class=" fas fa-edit text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div id="role-table-jsgrid"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
             <!-- subcribe form -->
-            <div id="monthly-form-content" class=''>
+            <div id="monthly-form-content" class='d-none'>
                 <section class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
@@ -390,7 +1088,6 @@ OrbitalLTE | Dashboard
                     </div>
                     <!-- transaction table -->
                     <div class="card" id="transaction-table">
-                        <!-- TODO: this -->
                         <h5 class="card-header">
                             Transaction Log
                         </h5>
@@ -431,6 +1128,7 @@ OrbitalLTE | Dashboard
                                     <!-- /.card-header -->
                                     <!-- form start -->
                                     <div class="card-body">
+                                        <!-- customer form -->
                                         <form>
                                             <!-- name -->
                                             <div class="form-group">
@@ -523,7 +1221,6 @@ OrbitalLTE | Dashboard
                     </div>
                     <!-- new customer table -->
                     <div class="card" id="new-customer-table">
-                        <!-- TODO: this -->
                         <h5 class="card-header">
                             New Customer
                         </h5>
@@ -1024,7 +1721,6 @@ OrbitalLTE | Dashboard
                         <!-- filter -->
                         <div class="card customer-report-filter">
                             <h5 class="card-header">
-                                <!-- <strong>Filter</strong> -->
                                 Filter
                             </h5>
                             <div class="card-body">
@@ -1195,46 +1891,50 @@ OrbitalLTE | Dashboard
                                         <input type="text" class="form-control input-password"
                                             placeholder="Kode Voucher">
                                     </div>
+                                    <!-- date -->
                                     <div class="row">
                                         <div class="col-6">
                                             <!-- Start Date -->
                                             <div class=" form-group">
                                                 <label>Start Date</label>
-                                                <div class="input-group date" data-provider="datepicker">
-                                                    <!-- <style>
-                                                        .datepicker,
-                                                        .table-condensed {
-                                                            width: 300px;
-                                                            /* height: 300px; */
-                                                        }
-                                                    </style> -->
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text fa fa-calendar"></span>
+                                                <div class="input-group date" id="sdate-input"
+                                                    data-target-input="nearest">
+                                                    <div class="input-group-append" data-toggle="datetimepicker"
+                                                        data-target="#sdate-input">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                                        </div>
                                                     </div>
-                                                    <input type="text" class="form-control datepicker-input input-sdate"
-                                                        placeholder="Tanggal Mulai">
+                                                    <input type="text"
+                                                        class="form-control datetimepicker-input input-sdate"
+                                                        data-toggle="datetimepicker" data-target="#sdate-input" />
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- </div> -->
                                         <div class="col-6">
                                             <!-- Due Date -->
                                             <div class=" form-group">
                                                 <label>Due Date</label>
-                                                <div class="input-group date" data-provider="datepicker">
-                                                    <!-- <style>
-                                                        .datepicker,
-                                                        .table-condensed {
-                                                            width: 300px;
-                                                            /* height: 300px; */
-                                                        }
-                                                    </style> -->
+                                                <div class="input-group datepicker date" id="ddate-input"
+                                                    data-target-input="nearest">
+                                                    <div class="input-group-append" data-toggle="datetimepicker"
+                                                        data-target="#ddate-input">
+                                                        <div class="input-group-text"><i class="fa fa-calendar"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input type="text"
+                                                        class="form-control datetimepicker-input input-ddate"
+                                                        data-toggle="datetimepicker" data-target="#ddate-input" />
+                                                    <!-- </div> -->
+                                                    <!-- <div class="input-group datepicker date" data-provider="datepicker">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text fa fa-calendar"></span>
                                                     </div>
                                                     <input type="text" class="form-control datepicker-input input-ddate"
-                                                        placeholder="Tanggal Akhir">
+                                                        placeholder="Tanggal Akhir"> -->
                                                 </div>
                                             </div>
+                                            <!-- </div> -->
                                         </div>
                                     </div>
                                     <!-- Amount -->
@@ -1502,7 +2202,8 @@ OrbitalLTE | Dashboard
                         <!-- Date -->
                         <div class="form-group">
                             <label>Date</label>
-                            <div class="input-group date " id="ap-modal-date-input" data-target-input="nearest">
+                            <div class="input-group datepicker date" id="ap-modal-date-input"
+                                data-target-input="nearest">
                                 <div class="input-group-append" data-toggle="datetimepicker"
                                     data-target="#ap-modal-date-input">
                                     <div class="input-group-text"><i class="fa fa-calendar"></i></div>
@@ -1511,23 +2212,6 @@ OrbitalLTE | Dashboard
                                     data-toggle="datetimepicker" data-target="#ap-modal-date-input" />
                             </div>
                         </div>
-                        <!-- <div class=" form-group">
-                            <label>Date</label>
-                            <div class="input-group date" data-provider="datepicker">
-                                <style>
-                                    .datepicker,
-                                    .table-condensed {
-                                        width: 300px;
-                                        /* height: 300px; */
-                                    }
-                                </style>
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text fa fa-calendar"></span>
-                                </div>
-                                <input type="text" class="form-control datepicker-input input-date"
-                                    placeholder="Enter a Date">
-                            </div>
-                        </div> -->
 
                         <!-- Area -->
                         <div class="form-group">
@@ -1637,6 +2321,21 @@ OrbitalLTE | Dashboard
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="block-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body">
+                    <center>
+                        <span class="fas fa-times-circle text-danger" style="font-size: 100px;"></span>
+                        <h2 class="msg"></h2>
+                    </center>
+                </div>
+            </div>
+        </div>
     </div>
     {{ block.super }}
     <!-- ./wrapper -->

@@ -18,7 +18,11 @@ from django.contrib import admin
 
 urlpatterns = [
     path('', include('polls.urls')),
+    path('__reload__/', include('django_browser_reload.urls')),
     path('customer/', include('customer.urls')),
-    path('admin/shell', include('django_admin_shell.urls')),
+    path('team/', include('team.urls')),
+    path('outlet/', include('outlet.urls')),
+    path('inventory/', include('inventory.urls')),
+    # path('admin/shell', include('django_admin_shell.urls')),
     path('admin', admin.site.urls),
 ]

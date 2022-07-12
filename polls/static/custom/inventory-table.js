@@ -179,6 +179,6 @@ function inventoryContent() {
     // console.log(INVEN_TYPE_DATA);
     Inventory.init();
 
-    CONTENT_INIT.table.invent = InventoryType;
-    CONTENT_INIT.table.inven = Inventory;
+    // CONTENT_INIT.table.invent = InventoryType;
+    // CONTENT_INIT.table.inven = Inventory;
 }
